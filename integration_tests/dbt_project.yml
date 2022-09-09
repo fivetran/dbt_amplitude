@@ -1,0 +1,40 @@
+config-version: 2
+
+name: 'amplitude_integration_tests'
+version: '0.1.0'
+config-version: 2
+profile: 'integration_tests'
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: [spark_utils, dbt_utils]
+
+models:
+  salesforce:
+    materialized: table
+    intermediate:
+      materialized: ephemeral
+
+vars:
+  amplitude_source:
+    amplitude_event_identifier: "amplitude_event_data"
+    amplitude_event_type_identifier: "amplitude_event_type_data"
+    amplitude_schema: amplitude_integration_tests
+
+seeds:
+  amplitude_integration_tests:
+    +column_types:
+      _fivetran_synced: timestamp
+    amplitude_event_data:
+      +column_types:
+        id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        app: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        amplitude_id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        event_type_id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        schema: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        session_id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+    amplitude_event_type_data:
+      +column_types:
+        id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"

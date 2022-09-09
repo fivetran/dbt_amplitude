@@ -1,0 +1,19 @@
+config-version: 2
+
+name: 'amplitude'
+version: '0.1.0'
+
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+models:
+  amplitude:
+    intermediate:
+      +materialized: view # switch to ephemeral later
+      +schema: int_amplitude
+    +materialized: table
+    +schema: amplitude
+
+vars:
+  amplitude:
+    event_type: "{{ ref('stg_amplitude__event_type') }}"
+    event: "{{ ref('stg_amplitude__event') }}"
