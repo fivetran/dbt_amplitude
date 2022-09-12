@@ -17,3 +17,5 @@ vars:
   amplitude:
     event_type: "{{ ref('stg_amplitude__event_type') }}"
     event: "{{ ref('stg_amplitude__event') }}"
+
+    event_properties_to_pivot: []  # list of events properties from the event table (in the event source table, event_properties)  to pivot out into columns in amplitude__event_enhanced
