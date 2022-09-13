@@ -5,4 +5,6 @@ packages:
 # - package:
     # - git: https://github.com/fivetran/dbt_amplitude_source.git
     #   revision: main
-  - local: ../dbt_amplitude_source
+  # - local: ../dbt_amplitude_source
+  - git: https://github.com/fivetran/dbt_amplitude_source.git
+    revision: main
