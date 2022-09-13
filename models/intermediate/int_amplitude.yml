@@ -1,0 +1,12 @@
+version: 2
+
+models:
+
+  - name: int_amplitude__sessions
+    description: Each record
+    columns:
+      - name: session_id
+        description: id
+        tests:
+          - unique
+          - not_null
