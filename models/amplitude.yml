@@ -10,3 +10,21 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: amplitude__sessions
+    description: Each record represent a distinct session_id with aggregated metrics for that session.
+    columns:
+      - name: session_id
+        description: Session id
+        tests:
+          - unique
+          - not_null
+
+  - name: amplitude__user_enhanced
+    description: Each record represent a distinct user with aggregated metrics for that user.
+    columns:
+      - name: user
+        description: User id
+        tests:
+          - unique
+          - not_null
