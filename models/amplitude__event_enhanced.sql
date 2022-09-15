@@ -1,3 +1,13 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='unique_key',
+        partition_by={
+            "field": "date_day",
+            "data_type": "date"
+        }
+    )
+}}
 with event_data as (
 
     select * 

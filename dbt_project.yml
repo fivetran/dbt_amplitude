@@ -18,6 +18,15 @@ vars:
     event_type: "{{ ref('stg_amplitude__event_type') }}"
     event: "{{ ref('stg_amplitude__event') }}"
 
+    amplitude__using_user_id: True # set as true if your company uses the user_id field
+
     event_properties_to_pivot: []  # list of events properties from the event table (in the event source table, event_properties)  to pivot out into columns in amplitude__event_enhanced
     group_properties_to_pivot: []  # list of group properties from the event table (in the event source table, group_properties)  to pivot out into columns in amplitude__event_enhanced
     user_properties_to_pivot: []  # list of user properties from the event table (in the event source table, user_properties)  to pivot out into columns in amplitude__event_enhanced
+
+    date_range_start: '2010-01-01' 
+
+    sessionization_inactivity: 30     # number of minutes it takes for a session to timeout due to inactivity
+    session_event_criteria: [] # filter to place on events in order to qualify for sessionization
+
+    sessionization_trailing_window: 3     # number of hours to look back at for each mixpanel__sessions run. this allows you to sessionize events that arrive late without requiring a full refresh
