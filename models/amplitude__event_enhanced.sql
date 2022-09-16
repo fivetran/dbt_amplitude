@@ -22,7 +22,7 @@ event_type as (
 )
 
 select
-    {{ dbt_utils.surrogate_key(['ed.event_id','ed.session_id']) }} as unique_event_id,
+    unique_event_id,
     ed.event_id,
     ed.event_type,
     ed.event_time,
