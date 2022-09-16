@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='session_id',
         partition_by={
-            "field": "session_started_at",
+            "field": "session_started_at_day",
             "data_type": "date"
         }
     )
@@ -28,14 +28,16 @@ session_agg as (
 ),
 
 session_number as (
-    select 
-        sa.session_id,
+    select
+        distinct sa.session_id,
+        ed.user_id,
         sa.events_per_session,
         sa.session_started_at,
         sa.session_ended_at,
         sa.session_length,
+        {{ dbt_utils.date_trunc('day', 'session_started_at') }} as session_started_at_day,
         case 
-            when ed.user_id is not null then row_number() over (partition by ed.user_id order by session_started_at asc) 
+            when ed.user_id is not null then dense_rank() over (partition by ed.user_id order by sa.session_started_at, sa.session_id asc)  -- dense rank used here because of rows belonging to same session (though now that we've filtered for distinct sesions, this shouldn't matter)
             else null
         end as user_session_number
 from session_agg sa
