@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='user_id',
         partition_by={
-            "field": " ",
+            "field": "event_day",
             "data_type": "date"
         }
     )
