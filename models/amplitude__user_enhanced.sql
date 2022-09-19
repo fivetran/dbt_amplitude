@@ -4,7 +4,7 @@
         unique_key='user_id',
         partition_by={
             "field": "event_day",
-            "data_type": "date"
+            "data_type": "timestamp"
         }
     )
 }}
@@ -26,18 +26,15 @@ session_data as (
 
 select
     ee.user_id,
-    -- case when sd.is_first_user_session = '1' then sd.session_id else null end as first_user_session,
-    -- count(distinct event_id) as total_events_per_user,
-    -- count(distinct sd.session_id) as total_sessions_per_user,
-    -- avg(session_length) as average_session_length
-sd.session_id,
-sd.session_ended_at,
-lag(sd.session_ended_at,1) over (partition by ee.user_id order by sd.session_ended_at) as last_session_ended_at 
+    count(distinct ee.unique_event_id) as total_events_per_user,
+    count(distinct sd.session_id) as total_sessions_per_user,
+    avg(sd.session_length) as average_session_length,
+    avg(sd.time_in_between_sessions) as average_time_in_between_sessions
 
 from event_enhanced ee
 left join session_data sd
     on ee.session_id = sd.session_id
-where user_id is not null
-group by user_id, sd.session_id, sd.session_ended_at
+where ee.user_id is not null
+group by ee.user_id
 
 {% endif %}

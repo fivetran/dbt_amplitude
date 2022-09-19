@@ -4,7 +4,7 @@
         unique_key='unique_event_id',
         partition_by={
             "field": "event_day",
-            "data_type": "date"
+            "data_type": "timestamp"
         }
     )
 }}

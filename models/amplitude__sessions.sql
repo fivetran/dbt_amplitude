@@ -4,7 +4,7 @@
         unique_key='session_id',
         partition_by={
             "field": "session_started_at_day",
-            "data_type": "date"
+            "data_type": "timestamp"
         }
     )
 }}
@@ -17,7 +17,7 @@ with event_data as (
 
 session_agg as (
 
-    select 
+    select
         distinct session_id,
         user_id,
         count(event_id) as events_per_session,
@@ -76,4 +76,3 @@ select
         else null
     end as days_in_between_sessions,
 from session_lag
-order by user_id
