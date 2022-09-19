@@ -23,7 +23,7 @@ models:
   - name: amplitude__user_enhanced
     description: Each record represent a distinct user with aggregated metrics for that user.
     columns:
-      - name: user
+      - name: user_id
         description: User id
         tests:
           - unique

@@ -58,7 +58,7 @@ select
     ed.schema,
     ed.start_version,
     ed.user_creation_time,
-    row_number() over (partition by session_id order by event_time asc, event_id asc) as session_event_number,
+    row_number() over (partition by session_id order by event_time asc) as session_event_number,
     ed.group_types,
     cast(ed.user_id as {{ dbt_utils.type_string() }}) as user_id, 
     et.event_type_id,
