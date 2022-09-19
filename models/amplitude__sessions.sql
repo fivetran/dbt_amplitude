@@ -74,5 +74,5 @@ select
     case
         when user_id is not null then (session_started_at_day - last_session_ended_at_day)
         else null
-    end as days_in_between_sessions,
+    end as days_in_between_sessions
 from session_lag

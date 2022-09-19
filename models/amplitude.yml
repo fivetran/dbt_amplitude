@@ -3,16 +3,16 @@ version: 2
 models:
 
   - name: amplitude__event_enhanced
-    description: Each record
+    description: Each record represents event data, enhanced with event type data and unnested event, group, and user properties. 
     columns:
-      - name: event_id
-        description: id
+      - name: unique_event_id
+        description: Unique key of each record
         tests:
           - unique
           - not_null
 
   - name: amplitude__sessions
-    description: Each record represent a distinct session_id with aggregated metrics for that session.
+    description: Each record represents a distinct session_id with aggregated metrics for that session.
     columns:
       - name: session_id
         description: Session id
@@ -21,7 +21,7 @@ models:
           - not_null
 
   - name: amplitude__user_enhanced
-    description: Each record represent a distinct user with aggregated metrics for that user.
+    description: Each record represents a distinct user with aggregated metrics for that user.
     columns:
       - name: user_id
         description: User id
