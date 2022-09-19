@@ -1,14 +1,3 @@
-{{
-    config(
-        materialized='incremental',
-        unique_key='user_id',
-        partition_by={
-            "field": "event_day",
-            "data_type": "timestamp"
-        }
-    )
-}}
-
 -- If using user_ids, this model will be included, otherwise it will not.
 {% if var('amplitude__using_user_id', True) %}
 
