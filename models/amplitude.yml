@@ -126,45 +126,55 @@ models:
           - unique
           - not_null
       - name: user_id
-        description: 
+        description: >
+          A readable ID specified by you.
+          Amplitude uses a combination of three different methods to identify your users: device IDs, Amplitude ID, and user IDs. The first comes directly from your users' devices, while the second is an ID that Amplitude automatically creates once it has enough information to conclusively identify a unique user. The user ID, however, is something you'd set up.
+          In Amplitude, a user ID is a unique identifier applied to individual users. Using them is optional, but recommended: your product should set a user ID once a user has created an account, logged in, or is otherwise identified in your product.
+          Amplitude can use a user ID to reconcile events across multiple devices under the same user ID. Additionally, a user's event data will be merged on the backend so that all anonymous events prior to the assignment of a user ID will be connected to the correct user. For this reason, you can wait to assign user IDs if that makes sense for your product. Conversely, this is also why you should not set user IDs for anonymous users.
+          Once set, user IDs in Amplitude cannot be changed.Once set, user IDs in Amplitude cannot be changed.
       - name: events_per_session
-        description: 
+        description: The count of events in a session
       - name: session_started_at
-        description: 
+        description: The time of the first event in a session
       - name: session_ended_at
-        description: 
+        description: The time of the last event in a session
       - name: session_length
-        description: 
+        description: The length of the session, in minutes
       - name: session_started_at_day
-        description: 
+        description: The day the session started
       - name: session_ended_at_day
-        description: 
+        description: The day the session ended
       - name: user_session_number
-        description: 
+        description: The number of the session, within a user's lifetime
       - name: last_session_ended_at
-        description: 
+        description: The time the prior session ended at
       - name: last_session_ended_at_day
-        description: 
+        description: The day the prior session ended
       - name: is_first_user_session
-        description: 
+        description: Boolean of whether or not a session is the user's first session
       - name: minutes_in_between_sessions
-        description: 
+        description: The minutes in between sessions
       - name: days_in_between_sessions
-        description: 
+        description: The days in between sessions
 
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
     columns:
       - name: user_id
-        description: User id
+        description: >
+          A readable ID specified by you.
+          Amplitude uses a combination of three different methods to identify your users: device IDs, Amplitude ID, and user IDs. The first comes directly from your users' devices, while the second is an ID that Amplitude automatically creates once it has enough information to conclusively identify a unique user. The user ID, however, is something you'd set up.
+          In Amplitude, a user ID is a unique identifier applied to individual users. Using them is optional, but recommended: your product should set a user ID once a user has created an account, logged in, or is otherwise identified in your product.
+          Amplitude can use a user ID to reconcile events across multiple devices under the same user ID. Additionally, a user's event data will be merged on the backend so that all anonymous events prior to the assignment of a user ID will be connected to the correct user. For this reason, you can wait to assign user IDs if that makes sense for your product. Conversely, this is also why you should not set user IDs for anonymous users.
+          Once set, user IDs in Amplitude cannot be changed.Once set, user IDs in Amplitude cannot be changed.
         tests:
           - unique
           - not_null
       - name: total_events_per_user
-        description:
+        description: The total number of events for a certain user
       - name: total_sessions_per_user
-        description:
+        description: The total number of sessions for a certain user
       - name: average_session_length
-        description: Length of session, in minutes
+        description: Average length of sessions, in minutes
       - name: average_minutes_in_between_sessions
-        description:
+        description: Average minutes in between sessions for a user
