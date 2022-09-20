@@ -1,7 +1,7 @@
 {{
     config(
         materialized='incremental',
-        unique_key='session_id',
+        unique_key='unique_session_id',
         partition_by={
             "field": "session_started_at_day",
             "data_type": "timestamp"
@@ -18,7 +18,7 @@ with event_data as (
 session_agg as (
 
     select
-        distinct session_id,
+        distinct unique_session_id,
         user_id,
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
@@ -26,12 +26,12 @@ session_agg as (
         max(event_time) - min(event_time) as session_length
 
     from event_data
-    group by session_id, user_id
+    group by unique_session_id, user_id
 ),
 
 session_ranking as (
     select 
-        session_id,
+        unique_session_id,
         user_id,
         events_per_session,
         session_started_at,
@@ -68,11 +68,11 @@ select
         else '0' 
     end as is_first_user_session,
     case
-        when user_id is not null then (session_started_at - last_session_ended_at)
+        when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'minute') }} 
         else null
-    end as time_in_between_sessions,
+    end as minutes_in_between_sessions,
     case
-        when user_id is not null then (session_started_at_day - last_session_ended_at_day)
+        when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at_day', 'session_started_at_day', 'day') }}
         else null
     end as days_in_between_sessions
 from session_lag

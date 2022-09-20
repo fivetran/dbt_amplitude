@@ -23,6 +23,7 @@ event_type as (
 
 select
     unique_event_id,
+    unique_session_id,
     ed.event_id,
     ed.event_type,
     ed.event_time,
