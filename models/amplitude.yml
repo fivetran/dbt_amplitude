@@ -13,9 +13,6 @@ models:
           - not_null
       - name: unique_session_id
         description: Unique key of each session, concatenating user_id and session_id
-        tests:
-          - unique
-          - not_null
       - name: event_id
         description: A counter that distinguishes events
       - name: event_type
@@ -32,7 +29,8 @@ models:
       - name: event_day
         description: Day of event time
       - name: session_id
-        description: The session start time in milliseconds since epoch.
+        description: >
+          The session start time in milliseconds since epoch.
           All events within the same session share the same session ID. By default, the setting in Amplitude for the session property is session ID. All events with the same session ID and the same user ID will be grouped into the same session. The session ID does not have to be unique across multiple users. Session IDs for events sent via the Amplitude SDKs are automatically generated and managed. However, for events sent via the HTTP API, Amplitude defaults to a session ID of -1. This means the event is excluded from all session metrics.
       - name: amplitude_id
         description: An internal ID used to count unique users.
@@ -127,6 +125,32 @@ models:
         tests:
           - unique
           - not_null
+      - name: user_id
+        description: 
+      - name: events_per_session
+        description: 
+      - name: session_started_at
+        description: 
+      - name: session_ended_at
+        description: 
+      - name: session_length
+        description: 
+      - name: session_started_at_day
+        description: 
+      - name: session_ended_at_day
+        description: 
+      - name: user_session_number
+        description: 
+      - name: last_session_ended_at
+        description: 
+      - name: last_session_ended_at_day
+        description: 
+      - name: is_first_user_session
+        description: 
+      - name: minutes_in_between_sessions
+        description: 
+      - name: days_in_between_sessions
+        description: 
 
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
@@ -136,5 +160,11 @@ models:
         tests:
           - unique
           - not_null
-      - name: session_length
+      - name: total_events_per_user
+        description:
+      - name: total_sessions_per_user
+        description:
+      - name: average_session_length
         description: Length of session, in minutes
+      - name: average_minutes_in_between_sessions
+        description:
