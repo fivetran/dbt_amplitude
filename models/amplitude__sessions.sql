@@ -23,7 +23,7 @@ session_agg as (
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
         max(event_time) as session_ended_at,
-        max(event_time) - min(event_time) as session_length,
+        max(event_time) - min(event_time) as session_length
 
     from event_data
     group by session_id, user_id
