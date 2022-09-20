@@ -3,9 +3,7 @@
         materialized='incremental',
         unique_key='unique_session_id',
         partition_by={
-            "field": "session_started_at_day",
-            "data_type": "timestamp"
-        }
+            "field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'], incremental_strategy = 'merge', file_format = 'delta'
     )
 }}
 
