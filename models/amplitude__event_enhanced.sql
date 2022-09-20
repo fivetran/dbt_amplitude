@@ -2,10 +2,9 @@
     config(
         materialized='incremental',
         unique_key='unique_event_id',
-        partition_by={
-            "field": "event_day",
-            "data_type": "timestamp"
-        }
+        partition_by={"field": "event_day", "data_type": "timestamp"} if target.type != 'spark' else ['event_day'],
+        incremental_strategy='merge',
+        file_format='delta'
     )
 }}
 
