@@ -18,7 +18,7 @@ select
     count(distinct ee.unique_event_id) as total_events_per_user,
     count(distinct sd.unique_session_id) as total_sessions_per_user,
     avg(sd.session_length) as average_session_length,
-    avg(sd.time_in_between_sessions) as average_time_in_between_sessions
+    avg(sd.minutes_in_between_sessions) as average_minutes_in_between_sessions
 
 from event_enhanced ee
 left join session_data sd

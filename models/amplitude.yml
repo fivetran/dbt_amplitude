@@ -136,3 +136,5 @@ models:
         tests:
           - unique
           - not_null
+      - name: session_length
+        description: Length of session, in minutes

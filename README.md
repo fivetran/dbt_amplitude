@@ -18,6 +18,8 @@
 - This package enables users to:
 ## finish
 
+# mention all the vars in dbt project yml
+
 This package also generates a comprehensive data dictionary of your source and modeled Amplitude data via the [dbt docs site](https://fivetran.github.io/dbt_amplitude/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
 
