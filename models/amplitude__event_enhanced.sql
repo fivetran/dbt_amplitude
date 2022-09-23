@@ -1,10 +1,10 @@
-{{
-    config(
-        materialized='incremental',
-        unique_key='unique_event_id',
-        partition_by={ "field": "event_day", "data_type": "timestamp"} if target.type != 'spark' else ['event_day'], incremental_strategy = 'merge', file_format= 'delta' 
-    )
-}}
+{{ 
+    config( 
+        materialized='incremental', 
+        unique_key='unique_event_id', 
+        partition_by={ "field": "event_day", "data_type": "timestamp"} if target.type != 'spark' else ['event_day'], incremental_strategy = 'merge', file_format= 'delta'  
+    ) 
+}} 
 
 with event_data as (
 
@@ -18,9 +18,9 @@ event_type as (
     from {{ var('event_type') }}
 )
 
-select
-    unique_event_id,
-    unique_session_id,
+select 
+    unique_event_id, 
+    unique_session_id, 
     ed.event_id,
     ed.event_type,
     ed.event_time,
@@ -65,18 +65,18 @@ select
     et.totals,
     et.value
 
-    {% if var('event_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
+    {% if var('event_properties_to_pivot') %}, 
+    {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }} 
     {% endif %}
 
-    {% if var('group_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }}
+    {% if var('group_properties_to_pivot') %}, 
+    {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }} 
     {% endif %}
 
-    {% if var('user_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'user_properties', list_of_properties = var('user_properties_to_pivot')) }}
+    {% if var('user_properties_to_pivot') %}, 
+    {{ fivetran_utils.pivot_json_extract(string = 'user_properties', list_of_properties = var('user_properties_to_pivot')) }} 
     {% endif %}
 
-    from event_data ed 
-    left join event_type et
+    from event_data ed  
+    left join event_type et 
     on ed.event_type_id = et.event_type_id

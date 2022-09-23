@@ -1,11 +1,11 @@
-{{
-    config(
+{{ 
+    config( 
         materialized='incremental',
-        unique_key='unique_session_id',
-        partition_by={
-            "field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'], incremental_strategy = 'merge', file_format = 'delta'
-    )
-}}
+        unique_key='unique_session_id', 
+        partition_by={ 
+            "field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'], incremental_strategy = 'merge', file_format = 'delta' 
+    ) 
+}} 
 
 with event_data as (
 
@@ -16,7 +16,7 @@ with event_data as (
 session_agg as (
 
     select
-        distinct unique_session_id,
+        distinct unique_session_id, 
         user_id,
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
@@ -24,7 +24,7 @@ session_agg as (
         {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'minute') }} as session_length
 
     from event_data
-    group by unique_session_id, user_id
+    group by unique_session_id, user_id 
 ),
 
 session_ranking as (
@@ -41,7 +41,7 @@ session_ranking as (
             when user_id is not null then row_number() over (partition by user_id order by session_started_at) 
             else null
         end as user_session_number
-from session_agg
+from session_agg 
 ),
 
 session_lag as (
@@ -56,14 +56,14 @@ session_lag as (
             when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id order by session_ended_at_day) 
             else null
         end as last_session_ended_at_day
-from session_ranking
+from session_ranking 
 )
 
 select 
     *,
     case
-        when user_session_number = 1 then '1' 
-        else '0' 
+        when user_session_number = 1 then '1'  
+        else '0'  
     end as is_first_user_session,
     case
         when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'minute') }} 

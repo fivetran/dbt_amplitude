@@ -1,5 +1,5 @@
--- If using user_ids, this model will be included, otherwise it will not.
-{% if var('amplitude__using_user_id', True) %}
+-- If using user_ids, this model will be included, otherwise it will not. 
+{% if var('amplitude__using_user_id', True) %} 
 
 with event_enhanced as (
 

@@ -11,8 +11,8 @@ models:
         tests:
           - unique
           - not_null
-      - name: unique_session_id
-        description: Unique key of each session, concatenating user_id and session_id
+      - name: unique_session_id 
+        description: Unique key of each session, concatenating user_id and session_id 
       - name: event_id
         description: A counter that distinguishes events
       - name: event_type
