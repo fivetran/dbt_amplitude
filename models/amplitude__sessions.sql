@@ -59,7 +59,7 @@ session_lag as (
 from session_ranking 
 )
 
-select 
+select  
     *,
     case
         when user_session_number = 1 then '1'  
