@@ -13,17 +13,17 @@ session_data as (
     from {{ ref('amplitude__sessions') }}
 )
 
-select
-    ee.user_id,
+select 
+    ee.user_id, 
     count(distinct ee.unique_event_id) as total_events_per_user,
     count(distinct sd.unique_session_id) as total_sessions_per_user,
     avg(sd.session_length) as average_session_length,
     avg(sd.minutes_in_between_sessions) as average_minutes_in_between_sessions
 
-from event_enhanced ee
-left join session_data sd
+from event_enhanced ee 
+left join session_data sd 
     on ee.unique_session_id = sd.unique_session_id
 where ee.user_id is not null
-group by ee.user_id
+group by ee.user_id 
 
 {% endif %}
