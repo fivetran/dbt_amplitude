@@ -2,9 +2,10 @@
     config(
         materialized='incremental',
         unique_key='unique_session_id',
-        partition_by={
-            "field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'], incremental_strategy = 'merge', file_format = 'delta'
-    )
+        partition_by={"field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'],
+        incremental_strategy = 'merge',
+        file_format = 'delta'
+        )
 }}
 
 with event_data as (
@@ -16,7 +17,7 @@ with event_data as (
 session_agg as (
 
     select
-        distinct unique_session_id,
+        unique_session_id,
         user_id,
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
@@ -24,7 +25,7 @@ session_agg as (
         {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'minute') }} as session_length
 
     from event_data
-    group by unique_session_id, user_id
+    group by 1,2
 ),
 
 session_ranking as (
@@ -47,7 +48,7 @@ from session_agg
 session_lag as (
     select
         *, 
-        -- have another column that says the prior sessions' end time, then in the next cte calculate the different between current session start time and last session end time
+        -- determine prior sessions' end time, then in the following cte calculate the different between current session start time and last session end time to determine the time in between sessions
         case 
             when user_id is not null then lag(session_ended_at,1) over (partition by user_id order by session_ended_at) 
             else null
@@ -62,8 +63,8 @@ from session_ranking
 select 
     *,
     case
-        when user_session_number = 1 then '1' 
-        else '0' 
+        when user_session_number = 1 then true
+        else false
     end as is_first_user_session,
     case
         when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'minute') }} 

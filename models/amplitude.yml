@@ -7,7 +7,7 @@ models:
 
     columns:
       - name: unique_event_id
-        description: Unique key of each record, concatenating event_id and session_id
+        description: A unique key for each event, concatenating event_id, device_id, and client_event_time
         tests:
           - unique
           - not_null
@@ -110,8 +110,6 @@ models:
         description: Event type ID
       - name: event_type_name
         description: Event type name
-      - name: in_waitroom
-        description: Whether event type is in waitroom
       - name: totals
         description: The total number of times the event has happened this week
       - name: value

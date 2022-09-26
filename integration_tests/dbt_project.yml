@@ -12,8 +12,6 @@ dispatch:
 models:
   amplitude:
     materialized: table
-    intermediate:
-      materialized: ephemeral
 
 vars:
   amplitude_source:
