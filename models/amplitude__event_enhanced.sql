@@ -8,10 +8,37 @@
         )
 }}
 
-with event_data as (
+with event_data_raw as (
 
     select * 
     from {{ var('event') }}
+
+    where 
+    {% if is_incremental() %}
+    
+    -- look back
+    event_time >= coalesce( ( select cast ( max {{ dbt_utils.date_trunc('day', 'event_time') }} as {{ dbt_utils.type_timestamp() }} ) from {{ this }} ), '2020-01-01')
+    
+    {% else %}
+
+    event_time >= {{ "'" ~ var('date_range_start', '2020-01-01') ~ "'"}}
+
+    {% endif %}
+),
+
+event_data as (
+    
+    select * 
+    from (
+    
+    select 
+        *,
+        row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time asc) as nth_event_record
+
+        from event_data_raw
+    ) as duplicates
+    where nth_event_record = 1
+
 ),
 
 event_type as (
