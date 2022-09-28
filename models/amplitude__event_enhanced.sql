@@ -26,6 +26,7 @@ with event_data_raw as (
     {% endif %}
 ),
 
+-- deduplicate
 event_data as (
     
     select * 
@@ -33,7 +34,7 @@ event_data as (
 
     select 
         *,
-        row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time asc) as nth_event_record
+        row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time desc) as nth_event_record
 
         from event_data_raw
     ) as duplicates
