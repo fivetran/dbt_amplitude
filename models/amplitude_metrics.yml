@@ -1,0 +1,24 @@
+version: 2
+
+metrics:
+  - name: session_length
+    label: Session Length
+    description: Duration of a session
+    model: ref('amplitude__event_enhanced')
+
+    type: average
+    sql: 
+
+    time_grains: [seconds, minute, hour, day, week]
+
+    dimensions:
+      - project_name
+      - city
+      - language
+      - country
+      - region
+      - os_version
+      - device_type
+      - platform
+
+# -- how to use pivoted nested fields as dimensions? -- ask in dbt metrics slack if theres a way to use this variable as a dimension ?
