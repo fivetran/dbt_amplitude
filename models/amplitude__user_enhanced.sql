@@ -1,5 +1,6 @@
 -- If using user_ids, this model will be included, otherwise it will not.
-{% if var('amplitude__using_user_id', True) %}
+--To disable this model, set the using_user_id variable within your dbt_project.yml file to False.
+{{ config(enabled=var('amplitude__user_id_enabled', True)) }}
 
 with event_enhanced as (
 
