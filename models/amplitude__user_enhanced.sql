@@ -1,6 +1,6 @@
--- If using user_ids, this model will be included, otherwise it will not.
---To disable this model, set the using_user_id variable within your dbt_project.yml file to False.
-{{ config(enabled=var('amplitude__user_id_enabled', True)) }}
+-- -- If using user_ids, this model will be included, otherwise it will not.
+-- --To disable this model, set the using_user_id variable within your dbt_project.yml file to False.
+-- {{ config(enabled=var('amplitude__user_id_enabled', True)) }}
 
 with event_enhanced as (
 
@@ -15,7 +15,7 @@ session_data as (
 )
 
 select
-    event_enhanced.user_id,
+    coalesce(event_enhanced.user_id, event_enhanced.amplitude_id) as amplitude_user_id,
     count(distinct event_enhanced.unique_event_id) as total_events_per_user,
     count(distinct session_data.unique_session_id) as total_sessions_per_user,
     avg(session_data.session_length) as average_session_length,
@@ -25,5 +25,4 @@ select
 from event_enhanced
 left join session_data
     on event_enhanced.unique_session_id = session_data.unique_session_id
-where event_enhanced.user_id is not null
 group by 1

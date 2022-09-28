@@ -68,6 +68,17 @@ vars:
 ```
 
 ## (Optional) Step 4: Additional Configurations
+<!-- ### Disable models for non-existent sources
+
+This package takes into consideration that not every Amplitude account utilizes the `user_id` field, and allows you to disable the corresponding functionality. By default, all variables' values are assumed to be `true`. Add variables for only the tables you want to disable:
+```yml
+vars:
+    amplitude__user_id_enabled:            False         # Disable if you are not using user_id
+
+# gonna have to update this portion if decide not to use user_id as variable (like using amplitude_id or device_id instead)
+``` -->
+
+## (Optional)
 ### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable: 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
