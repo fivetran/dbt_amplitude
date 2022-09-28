@@ -26,5 +26,3 @@ left join session_data
     on event_enhanced.unique_session_id = session_data.unique_session_id
 where event_enhanced.user_id is not null
 group by 1
-
-{% endif %}
