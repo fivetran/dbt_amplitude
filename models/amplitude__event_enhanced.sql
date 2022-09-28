@@ -10,15 +10,15 @@
 
 with event_data_raw as (
 
-    select * 
+    select *
     from {{ var('event') }}
 
     where 
     {% if is_incremental() %}
     
     -- look back
-    event_time >= coalesce( ( select cast ( max {{ dbt_utils.date_trunc('day', 'event_time') }} as {{ dbt_utils.type_timestamp() }} ) from {{ this }} ), '2020-01-01')
-    
+    event_time >= coalesce( ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} ), '2020-01-01')
+
     {% else %}
 
     event_time >= {{ "'" ~ var('date_range_start', '2020-01-01') ~ "'"}}
@@ -30,7 +30,7 @@ event_data as (
     
     select * 
     from (
-    
+
     select 
         *,
         row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time asc) as nth_event_record
@@ -54,7 +54,28 @@ select
     event_data.event_type,
     event_data.event_time,
     {{ dbt_utils.date_trunc('day', 'event_time') }} as event_day,
+
+    {% if var('event_properties_to_pivot') %},
+    {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
+    {% endif %}
+
+    event_type.event_type_id,
+    event_type.event_type_name,
     event_data.session_id,
+    row_number() over (partition by session_id order by event_time asc) as session_event_number,
+    event_data.group_types,
+
+    {% if var('group_properties_to_pivot') %},
+    {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }}
+    {% endif %}
+
+    cast(event_data.user_id as {{ dbt_utils.type_string() }}) as user_id, 
+    event_data.user_creation_time,
+
+    {% if var('user_properties_to_pivot') %},
+    {{ fivetran_utils.pivot_json_extract(string = 'user_properties', list_of_properties = var('user_properties_to_pivot')) }}
+    {% endif %}
+
     event_data.amplitude_id,
     event_data.app,
     event_data.project_name,
@@ -84,26 +105,8 @@ select
     event_data.dma,
     event_data.schema,
     event_data.start_version,
-    event_data.user_creation_time,
-    row_number() over (partition by session_id order by event_time asc) as session_event_number,
-    event_data.group_types,
-    cast(event_data.user_id as {{ dbt_utils.type_string() }}) as user_id, 
-    event_type.event_type_id,
-    event_type.event_type_name,
     event_type.totals,
     event_type.value
-
-    {% if var('event_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
-    {% endif %}
-
-    {% if var('group_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }}
-    {% endif %}
-
-    {% if var('user_properties_to_pivot') %},
-    {{ fivetran_utils.pivot_json_extract(string = 'user_properties', list_of_properties = var('user_properties_to_pivot')) }}
-    {% endif %}
 
     from event_data
     left join event_type
