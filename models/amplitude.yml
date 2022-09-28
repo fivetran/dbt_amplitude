@@ -137,7 +137,7 @@ models:
       - name: session_ended_at
         description: The time of the last event in a session
       - name: session_length
-        description: The length of the session, in minutes
+        description: The length of the session, in seconds
       - name: session_started_at_day
         description: The day the session started
       - name: session_ended_at_day
@@ -173,6 +173,8 @@ models:
       - name: total_sessions_per_user
         description: The total number of sessions for a certain user
       - name: average_session_length
-        description: Average length of sessions, in minutes
+        description: Average length of sessions, in seconds
+      - name: average_seconds_in_between_sessions
+        description: Average time in between sessions for a user, in seconds
       - name: average_minutes_in_between_sessions
-        description: Average minutes in between sessions for a user
+        description: Average time in between sessions for a user, in minutes
