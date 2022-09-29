@@ -15,7 +15,7 @@ session_data as (
 )
 
 select
-    coalesce(event_enhanced.user_id, event_enhanced.amplitude_id) as amplitude_user_id,
+    amplitude_user_id,
     count(distinct event_enhanced.unique_event_id) as total_events_per_user,
     count(distinct session_data.unique_session_id) as total_sessions_per_user,
     avg(session_data.session_length) as average_session_length,

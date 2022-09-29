@@ -51,6 +51,7 @@ event_type as (
 select
     event_data.unique_event_id,
     event_data.unique_session_id,
+    coalesce(event_data.user_id, event_data.amplitude_id) as amplitude_user_id,
     event_data.event_id,
     event_data.event_type,
     event_data.event_time,
