@@ -1,24 +1,155 @@
 version: 2
 
 metrics:
-  - name: session_length
+  - name: average_session_length
     label: Session Length
-    description: Duration of a session
-    model: ref('amplitude__event_enhanced')
+    description: Average duration of a session
+    model: ref('amplitude__sessions')
 
     type: average
-    sql: 
+    sql: session_length
 
+    timestamp: session_length
     time_grains: [seconds, minute, hour, day, week]
 
     dimensions:
+      - event_type
+      - app
       - project_name
       - city
       - language
       - country
       - region
+      - os_name
       - os_version
+      - device_brand
+      - device_carrier
+      - device_family
+      - device_model
       - device_type
       - platform
 
-# -- how to use pivoted nested fields as dimensions? -- ask in dbt metrics slack if theres a way to use this variable as a dimension ?
+    # filters:
+    #   - field: is_paying
+    #     operator: 'is'
+    #     value: 'true'
+    #   - field: lifetime_value
+    #     operator: '>='
+    #     value: '100'
+    #   - field: company_name
+
+# how to use pivoted nested fields as dimensions? -- ask in dbt metrics slack if theres a way to use this variable as a dimension ?
+
+
+
+  - name: total_events
+    label: Total Events
+    description: Count of events 
+    model: ref('amplitude__event_enhanced')
+
+    type: count_distinct
+    sql: unique_event_id
+
+    timestamp: event_time
+    time_grains: [seconds, minute, hour, day, week]
+
+    dimensions:
+      - event_type
+      - app
+      - project_name
+      - city
+      - language
+      - country
+      - region
+      - os_name
+      - os_version
+      - device_brand
+      - device_carrier
+      - device_family
+      - device_model
+      - device_type
+      - platform
+
+  - name: total_sessions
+    label: Total Sessions
+    description: Count of sessions 
+    model: ref('amplitude__sessions')
+
+    type: count_distinct
+    sql: unique_session_id
+
+    timestamp: session_started_at
+    time_grains: [seconds, minute, hour, day, week]
+
+    dimensions:
+      - event_type
+      - app
+      - project_name
+      - city
+      - language
+      - country
+      - region
+      - os_name
+      - os_version
+      - device_brand
+      - device_carrier
+      - device_family
+      - device_model
+      - device_type
+      - platform
+
+  - name: total_users
+    label: Total Users
+    description: Count of Users 
+    model: ref('amplitude__event_enhanced')
+
+    type: count_distinct
+    sql: amplitude_user_id
+
+    timestamp: user_creation_time
+    time_grains: [seconds, minute, hour, day, week]
+
+    dimensions:
+      - event_type
+      - app
+      - project_name
+      - city
+      - language
+      - country
+      - region
+      - os_name
+      - os_version
+      - device_brand
+      - device_carrier
+      - device_family
+      - device_model
+      - device_type
+      - platform
+
+  - name: average_time_in_between_sessions
+    label: Average time in between sessions
+    description: Average duration in between sessions
+    model: ref('amplitude__sessions')
+
+    type: average
+    sql: seconds_in_between_sessions
+
+    timestamp: seconds_in_between_sessions
+    time_grains: [seconds, minute, hour, day, week]
+
+    dimensions:
+      - event_type
+      - app
+      - project_name
+      - city
+      - language
+      - country
+      - region
+      - os_name
+      - os_version
+      - device_brand
+      - device_carrier
+      - device_family
+      - device_model
+      - device_type
+      - platform
