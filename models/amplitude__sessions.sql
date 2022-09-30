@@ -66,12 +66,12 @@ session_agg as (
         min(event_time) as session_started_at,
         max(event_time) as session_ended_at,
         {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} as session_length
-
     from event_data
     {{ dbt_utils.group_by(17) }}
 ),
 
 session_ranking as (
+
     select 
         unique_session_id,
         user_id,
@@ -100,7 +100,7 @@ session_ranking as (
             when user_id is not null then row_number() over (partition by user_id order by session_started_at) 
             else null
         end as user_session_number
-from session_agg
+    from session_agg
 ),
 
 session_lag as (
@@ -115,7 +115,7 @@ session_lag as (
             when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id order by session_ended_at_day) 
             else null
         end as last_session_ended_at_day
-from session_ranking
+    from session_ranking
 )
 
 select 
