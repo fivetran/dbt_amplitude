@@ -59,7 +59,6 @@ select
 
     {% if var('event_properties_to_pivot') %},
     {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
-    ,
     {% endif %}
 
     event_type.event_type_id,
@@ -70,7 +69,6 @@ select
 
     {% if var('group_properties_to_pivot') %},
     {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }}
-    ,
     {% endif %}
 
     cast(event_data.user_id as {{ dbt_utils.type_string() }}) as user_id, 
@@ -78,7 +76,6 @@ select
 
     {% if var('user_properties_to_pivot') %},
     {{ fivetran_utils.pivot_json_extract(string = 'user_properties', list_of_properties = var('user_properties_to_pivot')) }}
-    ,
     {% endif %}
 
     event_data.amplitude_id,
