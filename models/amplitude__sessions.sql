@@ -47,27 +47,12 @@ session_agg as (
     select
         unique_session_id,
         user_id,
-        event_type,
-        app,
-        project_name,
-        city,
-        language,
-        country,
-        region,
-        os_name,
-        os_version,
-        device_brand,
-        device_carrier,
-        device_family,
-        device_model,
-        device_type,
-        platform,
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
         max(event_time) as session_ended_at,
         {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} as session_length
     from event_data
-    {{ dbt_utils.group_by(17) }}
+    {{ dbt_utils.group_by(2) }}
 ),
 
 session_ranking as (
@@ -75,21 +60,6 @@ session_ranking as (
     select 
         unique_session_id,
         user_id,
-        event_type,
-        app,
-        project_name,
-        city,
-        language,
-        country,
-        region,
-        os_name,
-        os_version,
-        device_brand,
-        device_carrier,
-        device_family,
-        device_model,
-        device_type,
-        platform,
         events_per_session,
         session_started_at,
         session_ended_at,
