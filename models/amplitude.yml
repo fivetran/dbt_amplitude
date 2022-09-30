@@ -115,6 +115,16 @@ models:
         description: The total number of times the event has happened this week
       - name: value
         description: Name of the event in the raw data.
+      - name: events_per_session
+        description: The count of events in a session
+      - name: session_started_at
+        description: The time of the first event in a session
+      - name: session_ended_at
+        description: The time of the last event in a session
+      - name: session_length
+        description: The length of the session, in seconds
+      - name: is_first_user_session
+        description: Boolean of whether or not a session is the user's first session
 
   - name: amplitude__sessions
     description: Each record represents a distinct session_id with aggregated metrics for that session.
@@ -151,10 +161,12 @@ models:
         description: The day the prior session ended
       - name: is_first_user_session
         description: Boolean of whether or not a session is the user's first session
+      - name: seconds_in_between_sessions
+        description: The seconds in between sessions of a user
       - name: minutes_in_between_sessions
-        description: The minutes in between sessions
+        description: The minutes in between sessions of a user
       - name: days_in_between_sessions
-        description: The days in between sessions
+        description: The days in between sessions of a user
 
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
@@ -177,3 +189,11 @@ models:
 
   - name: amplitude__daily_performance
     description: Each record represents
+      - name: event_day
+        description: Day of event time
+      - name: number_events
+        description: Count of number of distinct events
+      - name: number_sessions
+        description: Count of number of distinct sessions
+      - name: number_new_users
+        description: Count of number of distinct new visitors
