@@ -4,7 +4,7 @@ metrics:
   - name: average_session_length
     label: Session Length
     description: Average duration of a session
-    model: ref('amplitude__sessions')
+    model: ref('amplitude__event_enhanced')
 
     type: average
     sql: session_length
@@ -129,7 +129,7 @@ metrics:
   - name: average_time_in_between_sessions
     label: Average time in between sessions
     description: Average duration in between sessions
-    model: ref('amplitude__sessions')
+    model: ref('amplitude__event_enhanced')
 
     type: average
     sql: seconds_in_between_sessions
