@@ -4,7 +4,6 @@ models:
 
   - name: amplitude__event_enhanced
     description: Each record represents event data, enhanced with event type data and unnested event, group, and user properties. 
-
     columns:
       - name: unique_event_id
         description: A unique key for each event, concatenating event_id, device_id, and client_event_time
@@ -13,6 +12,8 @@ models:
           - not_null
       - name: unique_session_id
         description: Unique key of each session, concatenating user_id and session_id
+      - name: amplitude_user_id
+        description: Unique key for each user, which is user_id by default. If user_id does not exist, use amplitude_id
       - name: event_id
         description: A counter that distinguishes events
       - name: event_type
@@ -158,13 +159,8 @@ models:
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
     columns:
-      - name: user_id
-        description: >
-          A readable ID specified by you.
-          Amplitude uses a combination of three different methods to identify your users: device IDs, Amplitude ID, and user IDs. The first comes directly from your users' devices, while the second is an ID that Amplitude automatically creates once it has enough information to conclusively identify a unique user. The user ID, however, is something you'd set up.
-          In Amplitude, a user ID is a unique identifier applied to individual users. Using them is optional, but recommended: your product should set a user ID once a user has created an account, logged in, or is otherwise identified in your product.
-          Amplitude can use a user ID to reconcile events across multiple devices under the same user ID. Additionally, a user's event data will be merged on the backend so that all anonymous events prior to the assignment of a user ID will be connected to the correct user. For this reason, you can wait to assign user IDs if that makes sense for your product. Conversely, this is also why you should not set user IDs for anonymous users.
-          Once set, user IDs in Amplitude cannot be changed.Once set, user IDs in Amplitude cannot be changed.
+      - name: amplitude_user_id
+        description: Unique key for each user, which is user_id by default. If user_id does not exist, use amplitude_id
         tests:
           - unique
           - not_null
@@ -178,3 +174,6 @@ models:
         description: Average time in between sessions for a user, in seconds
       - name: average_minutes_in_between_sessions
         description: Average time in between sessions for a user, in minutes
+
+  - name: amplitude__daily_performance
+    description: Each record represents
