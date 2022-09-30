@@ -68,7 +68,7 @@ session_agg as (
         {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} as session_length
 
     from event_data
-    group by dbt_utils.group_by(10)
+    {{ dbt_utils.group_by(17) }}
 ),
 
 session_ranking as (
