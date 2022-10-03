@@ -176,6 +176,12 @@ models:
         tests:
           - unique
           - not_null
+      - name: user_created_at
+        description: Event_time (UTC) of the user's first event
+      - name: first_session_at
+        description: Timestamp of user's first recorded activity
+      - name: last_session_at
+        description: Timestamp of user's most recent activity
       - name: total_events_per_user
         description: The total number of events for a certain user
       - name: total_sessions_per_user

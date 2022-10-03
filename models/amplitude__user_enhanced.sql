@@ -1,7 +1,3 @@
--- -- If using user_ids, this model will be included, otherwise it will not.
--- --To disable this model, set the using_user_id variable within your dbt_project.yml file to False.
--- {{ config(enabled=var('amplitude__user_id_enabled', True)) }}
-
 with event_enhanced as (
 
     select * 
@@ -15,7 +11,10 @@ session_data as (
 )
 
 select
-    amplitude_user_id,
+    event_enhanced.amplitude_user_id,
+    min(event_enhanced.user_creation_time) as user_created_at,
+    min(event_enhanced.session_started_at) as first_session_at,
+    max(event_enhanced.session_ended_at) as last_session_at,
     count(distinct event_enhanced.unique_event_id) as total_events_per_user,
     count(distinct session_data.unique_session_id) as total_sessions_per_user,
     avg(session_data.session_length) as average_session_length,
