@@ -54,5 +54,4 @@ date_spine as (
 )
 
 select * from date_spine
-order by event_day asc
 
