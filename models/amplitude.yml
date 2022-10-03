@@ -188,9 +188,13 @@ models:
         description: Average time in between sessions for a user, in minutes
 
   - name: amplitude__daily_performance
-    description: Each record represents
+    description: Each record represents performance metrics for each distinct day.
+    columns:
       - name: event_day
         description: Day of event time
+        tests:
+          - unique
+          - not_null
       - name: number_events
         description: Count of number of distinct events
       - name: number_sessions
