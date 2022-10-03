@@ -188,16 +188,22 @@ models:
         description: Average time in between sessions for a user, in minutes
 
   - name: amplitude__daily_performance
-    description: Each record represents performance metrics for each distinct day.
+    description: Each record represents performance metrics for each distinct day and event type.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - event_day
+            - event_type
     columns:
       - name: event_day
         description: Day of event time
-        tests:
-          - unique
-          - not_null
+      - name: event_type
+        description: The assigned type of event. Example 'Add Friend'
       - name: number_events
-        description: Count of number of distinct events
+        description: Count of distinct events
       - name: number_sessions
-        description: Count of number of distinct sessions
+        description: Count of distinct sessions
+      - name: number_users
+        description: Count of distinct visitors
       - name: number_new_users
-        description: Count of number of distinct new visitors
+        description: Count of distinct new visitors
