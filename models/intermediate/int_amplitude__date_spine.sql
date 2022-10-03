@@ -30,7 +30,7 @@ spine as (
 
     {% if is_incremental() %} 
     
-    where event_day > coalesce(( select max(event_day) from {{ this }} ), '2010-01-01') -- every user-event_type will have the same last day
+    where date_day > coalesce(( select max(date_day) from {{ this }} ), '2010-01-01') -- every user-event_type will have the same last day
     
     {% endif %}
     
@@ -43,13 +43,14 @@ date_spine as (
         cast(spine.date_day as date) as event_day,
         event_data.unique_event_id,
         event_data.amplitude_user_id,
-        event_data.event_type
+        event_data.event_type,
+        {{ dbt_utils.surrogate_key(['spine.date_day', 'event_data.unique_event_id']) }} as unique_key
 
     from spine 
     join event_data
         on spine.date_day >= event_data.event_day -- each user-event_type will a record for every day since their first day
 
-    group by 1,2,3,4
+    group by 1,2,3,4,5
     
 )
 
