@@ -2,7 +2,7 @@
     config(
         materialized='incremental',
         unique_key='unique_event_id',
-        partition_by={"field": "event_day", "data_type": "timestamp"} if target.type != 'spark' else ['event_day'],
+        partition_by={"field": "event_day", "data_type": "date"} if target.type != 'spark' else ['event_day'],
         incremental_strategy = 'merge',
         file_format = 'delta' 
         )
@@ -52,7 +52,7 @@ session_data as (
 
     select *
     from {{ ref('amplitude__sessions') }}
-)
+),
 
 event_enhanced as (
 
@@ -63,7 +63,7 @@ event_enhanced as (
         , event_data.event_id
         , event_data.event_type
         , event_data.event_time
-        , {{ dbt_utils.date_trunc('day', 'event_time') }} as event_day
+        , cast( {{ dbt_utils.date_trunc('day', 'event_time') }} as date) as event_day
 
         {% if var('event_properties_to_pivot') %},
         {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
