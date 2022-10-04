@@ -19,6 +19,7 @@
 ## finish
 
 # mention all the vars in dbt project yml
+# mentioned date_range_start AND date_range_end
 
 This package also generates a comprehensive data dictionary of your source and modeled Amplitude data via the [dbt docs site](https://fivetran.github.io/dbt_amplitude/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
