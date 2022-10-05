@@ -192,6 +192,8 @@ models:
         description: Average time in between sessions for a user, in seconds
       - name: average_minutes_in_between_sessions
         description: Average time in between sessions for a user, in minutes
+      - name: average_days_in_between_sessions
+        description: Average time in between sessions for a user, in days
 
   - name: amplitude__daily_performance
     description: Each record represents performance metrics for each distinct day and event type.

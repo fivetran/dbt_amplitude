@@ -3,7 +3,7 @@
 {{
     config(
         materialized='incremental',
-        unique_key='unique_key',
+        unique_key='daily_unique_key',
         partition_by={
             "field": "event_day",
             "data_type": "date"
@@ -72,7 +72,8 @@ final as (
         number_events,
         number_sessions,
         number_users,
-        number_new_users
+        number_new_users,
+        {{ dbt_utils.surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
     
     from spine_joined
 

@@ -1,7 +1,7 @@
 {{
     config(
         materialized='incremental',
-        unique_key='unique_key',
+        unique_key='date_spine_unique_key',
         partition_by={
             "field": "event_day",
             "data_type": "date"
@@ -44,7 +44,7 @@ date_spine as (
         event_data.unique_event_id,
         event_data.amplitude_user_id,
         event_data.event_type,
-        {{ dbt_utils.surrogate_key(['spine.date_day', 'event_data.unique_event_id']) }} as unique_key
+        {{ dbt_utils.surrogate_key(['spine.date_day', 'event_data.unique_event_id']) }} as date_spine_unique_key
 
     from spine 
     join event_data

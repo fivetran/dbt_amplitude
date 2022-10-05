@@ -76,7 +76,7 @@ session_ranking as (
 session_lag as (
     select
         *, 
-        -- determine prior sessions' end time, then in the following cte calculate the different between current session start time and last session end time to determine the time in between sessions
+        -- determine prior sessions' end time, then in the following cte calculate the difference between current session's start time and last session's end time to determine the time in between sessions
         case 
             when user_id is not null then lag(session_ended_at,1) over (partition by user_id order by session_ended_at) 
             else null

@@ -19,7 +19,8 @@ select
     count(distinct session_data.unique_session_id) as total_sessions_per_user,
     avg(session_data.session_length) as average_session_length,
     avg(session_data.seconds_in_between_sessions) as average_seconds_in_between_sessions,
-    avg(session_data.minutes_in_between_sessions) as average_minutes_in_between_sessions
+    avg(session_data.minutes_in_between_sessions) as average_minutes_in_between_sessions,
+    avg(session_data.days_in_between_sessions) as average_days_in_between_sessions
 
 from event_enhanced
 left join session_data
