@@ -50,7 +50,7 @@ session_agg as (
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
         max(event_time) as session_ended_at,
-        {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} as session_length
+        {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} / 60 as session_length_in_minutes
     from event_data
     {{ dbt_utils.group_by(2) }}
 ),
@@ -63,7 +63,7 @@ session_ranking as (
         events_per_session,
         session_started_at,
         session_ended_at,
-        session_length,
+        session_length_in_minutes,
         {{ dbt_utils.date_trunc('day', 'session_started_at') }} as session_started_at_day,
         {{ dbt_utils.date_trunc('day', 'session_ended_at') }} as session_ended_at_day,
         case 
@@ -95,15 +95,7 @@ select
         else 0
     end as is_first_user_session,
     case
-        when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'second') }} 
-        else null
-    end as seconds_in_between_sessions,
-    case
         when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'second') }} / 60
         else null
-    end as minutes_in_between_sessions,
-    case
-        when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at_day', 'session_started_at_day', 'day') }}
-        else null
-    end as days_in_between_sessions
+    end as minutes_in_between_sessions
 from session_lag
