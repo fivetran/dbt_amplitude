@@ -2,7 +2,7 @@
     config(
         materialized='incremental',
         unique_key='unique_session_id',
-        partition_by={"field": "session_started_at_day", "data_type": "timestamp"} if target.type != 'spark' else ['session_started_at_day'],
+        partition_by={"field": "session_started_at_day", "data_type": "timestamp"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
         incremental_strategy = 'merge',
         file_format = 'delta'
         )
@@ -17,11 +17,7 @@ with event_data_raw as (
     {% if is_incremental() %}
     
     -- look back
-    event_time >= coalesce( ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} ), '2020-01-01')
-
-    {% else %}
-
-    event_time >= {{ "'" ~ var('date_range_start', '2020-01-01') ~ "'"}}
+    event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }}
 
     {% endif %}
 ),

@@ -1,8 +1,8 @@
 {{
     config(
         materialized='incremental',
-        unique_key='unique_event_id',
-        partition_by={"field": "event_day", "data_type": "date"} if target.type != 'spark' else ['event_day'],
+        unique_key='unique_key',
+        partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
         incremental_strategy = 'merge',
         file_format = 'delta' 
         )
@@ -17,11 +17,7 @@ with event_data_raw as (
     {% if is_incremental() %}
     
     -- look back
-    event_time >= coalesce( ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} ), '2020-01-01')
-
-    {% else %}
-
-    event_time >= {{ "'" ~ var('date_range_start', '2020-01-01') ~ "'"}}
+    event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} 
 
     {% endif %}
 ),
@@ -34,7 +30,7 @@ event_data as (
 
     select 
         *,
-        row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time desc) as nth_event_record
+        row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc) as nth_event_record
 
         from event_data_raw
     ) as duplicates
@@ -59,7 +55,7 @@ event_enhanced as (
     select
         event_data.unique_event_id
         , event_data.unique_session_id
-        , event_data.amplitude_user_id
+        , cast(event_data.amplitude_user_id as {{ dbt_utils.type_string() }}) as amplitude_user_id
         , event_data.event_id
         , event_data.event_type
         , event_data.event_time
@@ -132,5 +128,7 @@ event_enhanced as (
         on event_data.unique_session_id = session_data.unique_session_id
 )
 
-select * 
+select 
+    *,
+    {{ dbt_utils.surrogate_key(['unique_event_id','event_day']) }} as unique_key
 from event_enhanced
