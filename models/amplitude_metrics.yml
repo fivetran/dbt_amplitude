@@ -11,7 +11,7 @@ metrics:
     sql: unique_event_id
 
     timestamp: event_time
-    time_grains: [minute, hour, day, week, month, year]
+    time_grains: [day, week, month, quarter, year]
 
     dimensions:
       - event_type
@@ -40,7 +40,7 @@ metrics:
     sql: session_length
 
     timestamp: event_time
-    time_grains: [hour, day, week, month, year]
+    time_grains: [day, week, month, quarter, year]
 
     dimensions:
       - event_type
@@ -68,7 +68,7 @@ metrics:
     sql: unique_session_id
 
     timestamp: event_time
-    time_grains: [hour, day, week, month, year]
+    time_grains: [day, week, month, quarter, year]
 
     dimensions:
       - event_type
@@ -96,7 +96,7 @@ metrics:
     sql: amplitude_user_id
 
     timestamp: event_time
-    time_grains: [hour, day, week, month, year]
+    time_grains: [day, week, month, quarter, year]
 
     dimensions:
       - event_type
@@ -124,7 +124,7 @@ metrics:
     sql: seconds_in_between_sessions
 
     timestamp: event_time
-    time_grains: [hour, day, week, month, year]
+    time_grains: [day, week, month, quarter, year]
 
     dimensions:
       - event_type
