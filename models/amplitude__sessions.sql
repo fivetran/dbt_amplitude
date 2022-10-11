@@ -13,11 +13,10 @@ with event_data_raw as (
     select *
     from {{ var('event') }}
 
-    where 
     {% if is_incremental() %}
     
     -- look back
-    event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }}
+    where event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }}
 
     {% endif %}
 ),

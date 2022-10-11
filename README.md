@@ -21,6 +21,8 @@
 # mention all the vars in dbt project yml
 # mentioned date_range_start AND date_range_end
 
+# mention using daily performance model for funnel/ retention 
+
 This package also generates a comprehensive data dictionary of your source and modeled Amplitude data via the [dbt docs site](https://fivetran.github.io/dbt_amplitude/)
 You can also refer to the table below for a detailed view of all models materialized by default within this package.
 
@@ -79,7 +81,6 @@ vars:
 # gonna have to update this portion if decide not to use user_id as variable (like using amplitude_id or device_id instead)
 ``` -->
 
-## (Optional)
 ### Change the Source Table References
 Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable: 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
