@@ -48,7 +48,7 @@ spine_joined as (
 
     select
         date_spine.event_day,
-        agg_event_data.event_type,
+        date_spine.event_type,
         agg_event_data.number_events,
         agg_event_data.number_sessions,
         agg_event_data.number_users,
@@ -75,7 +75,7 @@ final as (
 
     {% if is_incremental() %}
     -- only return the most recent day of data
-    where event_day >= coalesce( (select max(event_day)  from {{ this }} ), '2010-01-01')
+    where event_day >= coalesce( (select max(event_day)  from {{ this }} ), '2020-01-01')
 
     {% endif %}
 
