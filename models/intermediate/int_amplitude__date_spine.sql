@@ -2,11 +2,10 @@
     config(
         materialized='incremental',
         unique_key='date_spine_unique_key',
-        partition_by={
-            "field": "event_day",
-            "data_type": "date"
-        }
-    )
+        partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
+        incremental_strategy = 'merge',
+        file_format = 'delta' 
+        )
 }}
 
 with event_data as (
@@ -22,15 +21,15 @@ spine as (
     from (
         {{ dbt_utils.date_spine(
             datepart = "day", 
-            start_date =  "cast('" ~ var('date_range_start',  '2010-01-01') ~ "' as date)", 
-            end_date = "cast('" ~ var('date_range_end',  dbt_utils.dateadd("day", 1, dbt_utils.date_trunc('day', dbt_utils.current_timestamp())) ) ~ "' as date)" 
+            start_date =  "cast('" ~ var('date_range_start',  '2020-01-01') ~ "' as date)", 
+            end_date = "cast('" ~ var('date_range_end',  dbt_utils.date_trunc('day', dbt_utils.current_timestamp()) ) ~ "' as date)" 
             )
         }} 
     ) as spine
 
     {% if is_incremental() %} 
     
-    where date_day > coalesce(( select max(date_day) from {{ this }} ), '2010-01-01') -- every user-event_type will have the same last day
+    where date_day > ( select max(date_day) from {{ this }} )
     
     {% endif %}
     
