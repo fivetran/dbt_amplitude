@@ -14,9 +14,9 @@ with event_data_raw as (
     from {{ var('event') }}
 
     {% if is_incremental() %}
-    
-    -- look back
-    where event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} 
+
+    -- events are only eligible for de-duping if they occurred on the same calendar day 
+    where event_time >= (select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} )
 
     {% endif %}
 ),
@@ -116,9 +116,12 @@ event_enhanced as (
         , session_data.events_per_session
         , session_data.session_started_at
         , session_data.session_ended_at
-        , session_data.session_length
+        , session_data.user_session_number
+        , session_data.session_started_at_day
+        , session_data.session_ended_at_day
+        , session_data.session_length_in_minutes
         , session_data.is_first_user_session
-        , session_data.seconds_in_between_sessions
+        , session_data.minutes_in_between_sessions
 
     from event_data
     left join event_type

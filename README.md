@@ -105,17 +105,20 @@ models:
 ## (Optional) Step 5: Orchestrate your models with Fivetran Transformations for dbt Core™
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
 
+
 # 🔍 Does this package have dependencies?
-This dbt package is dependent on the following dbt packages. For more information on the below packages, refer to the [dbt hub](https://hub.getdbt.com/) site.
-> **If you have any of these dependent packages in your own `packages.yml` I highly recommend you remove them to ensure there are no package version conflicts.**
+This dbt package is dependent on the following dbt packages. Please be aware that these dependencies are installed by default within this package. For more information on the following packages, refer to the [dbt hub](https://hub.getdbt.com/) site.
+> IMPORTANT: If you have any of these dependent packages in your own `packages.yml` file, we highly recommend that you remove them from your root `packages.yml` to avoid package version conflicts.
 ```yml
 packages:
-    - package: fivetran/amplitude_source
-      version: [">=0.1.0", "<0.2.0"]
     - package: fivetran/fivetran_utils
       version: [">=0.3.0", "<0.4.0"]
+
     - package: dbt-labs/dbt_utils
-      version: [">=0.1.0", "<0.2.0"]
+      version: [">=0.8.0", "<0.9.0"]
+
+    - package: dbt-labs/spark_utils
+      version: [">=0.3.0", "<0.4.0"]
 ```
 # 🙌 How is this package maintained and can I contribute?
 ## Package Maintenance

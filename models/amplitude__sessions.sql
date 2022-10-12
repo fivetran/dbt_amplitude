@@ -16,7 +16,7 @@ with event_data_raw as (
     {% if is_incremental() %}
     
     -- look back
-    where event_time >= select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }}
+    where event_time >= ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }})
 
     {% endif %}
 ),
