@@ -17,10 +17,8 @@ select
     max(event_enhanced.session_ended_at) as last_session_at,
     count(distinct event_enhanced.unique_event_id) as total_events_per_user,
     count(distinct session_data.unique_session_id) as total_sessions_per_user,
-    avg(session_data.session_length) as average_session_length,
-    avg(session_data.seconds_in_between_sessions) as average_seconds_in_between_sessions,
-    avg(session_data.minutes_in_between_sessions) as average_minutes_in_between_sessions,
-    avg(session_data.days_in_between_sessions) as average_days_in_between_sessions
+    avg(session_data.session_length_in_minutes) as average_session_length_in_minutes,
+    avg(session_data.minutes_in_between_sessions) as average_minutes_in_between_sessions
 
 from event_enhanced
 left join session_data
