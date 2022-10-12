@@ -22,7 +22,7 @@ spine as (
         {{ dbt_utils.date_spine(
             datepart = "day", 
             start_date =  "cast('" ~ var('date_range_start',  '2020-01-01') ~ "' as date)", 
-            end_date = "cast('" ~ var('date_range_end',  dbt_utils.date_trunc('day', dbt_utils.current_timestamp()) ) ~ "' as date)" 
+            end_date = "cast('" ~ var('date_range_end',  dbt_utils.date_trunc("day", dbt_utils.current_timestamp()) ) ~ "' as date)" 
             )
         }} 
     ) as spine
