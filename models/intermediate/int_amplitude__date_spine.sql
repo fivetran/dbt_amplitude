@@ -14,6 +14,23 @@ with event_data as (
     from {{ ref('amplitude__event_enhanced') }}
 ),
 
+{% if execute %}
+{% set end_date_query %}
+    select  {{ dbt_utils.dateadd("day", 1, dbt_utils.date_trunc("day", dbt_utils.current_timestamp())) }}
+{% endset %}
+
+{% set end_date = run_query(end_date_query).columns[0][0]|string %}
+
+    {% if target.type == 'postgres' %}
+        {% set end_date_adjust = "cast('" ~ end_date[0:10] ~ "' as date)" %}
+
+    {% else %}
+        {% set end_date_adjust =  end_date[0:10]  %}
+
+    {% endif %}
+
+{% endif %}
+
 spine as (
 
     select * 
@@ -22,7 +39,7 @@ spine as (
         {{ dbt_utils.date_spine(
             datepart = "day", 
             start_date =  "cast('" ~ var('date_range_start',  '2020-01-01') ~ "' as date)", 
-            end_date = "cast('" ~ var('date_range_end',  dbt_utils.dateadd("day", 1, dbt_utils.date_trunc("day", dbt_utils.current_timestamp())) ) ~ "' as date)" 
+            end_date = "cast('" ~ var('date_range_end',  end_date_adjust) ~ "' as date)" 
             )
         }} 
     ) as spine

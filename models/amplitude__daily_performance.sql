@@ -1,13 +1,10 @@
---  funnel, retention 
---  with a summary of metrics such as total events, sessions, returning vs new users. May use an hour grain because of sessions being at 30 min default, this to be explored
 {{
     config(
         materialized='incremental',
         unique_key='daily_unique_key',
-        partition_by={
-            "field": "event_day",
-            "data_type": "date"
-        }
+        partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
+        incremental_strategy = 'merge',
+        file_format = 'delta' 
     )
 }}
 
