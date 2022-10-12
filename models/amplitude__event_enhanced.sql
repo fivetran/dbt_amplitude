@@ -29,8 +29,10 @@ event_data as (
 
     select 
         *,
-        -- first try doing with insert_id?
-        row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc) as nth_event_record
+        coalesce(
+            row_number() over (partition by _insert_id order by client_upload_time desc), 
+            row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+        ) as nth_event_record
 
         from event_data_raw
     ) as duplicates
