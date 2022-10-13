@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='date_spine_unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy = 'merge',
+        incremental_strategy='merge' if target.type not in ['postgres', 'redshift'] else 'delete+insert',
         file_format = 'delta' 
         )
 }}
@@ -34,7 +34,7 @@ spine as (
     from (
         {{ dbt_utils.date_spine(
             datepart = "day", 
-            start_date =  "cast('" ~ var('date_range_start',  '2020-01-01') ~ "' as date)", 
+            start_date =  "cast('" ~ var('date_range_start',  '2010-01-01') ~ "' as date)", 
             end_date = "cast('" ~ var('date_range_end',  end_date_adjust) ~ "' as date)" 
             )
         }} 
@@ -45,7 +45,6 @@ spine as (
     where date_day > ( select max(date_day) from {{ this }} )
     
     {% endif %}
-    
 ),
 
 date_spine as (
@@ -59,7 +58,6 @@ date_spine as (
     from spine 
     join event_data
         on spine.date_day >= event_data.event_day -- each event_type will have a record for every day since their first day
-    
 )
 
 select * 

@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy = 'merge',
+        incremental_strategy='merge' if target.type not in ['postgres', 'redshift'] else 'delete+insert',
         file_format = 'delta' 
         )
 }}
@@ -26,18 +26,16 @@ event_data as (
     
     select * 
     from (
+        select 
+            *,
+            coalesce(
+                row_number() over (partition by _insert_id order by client_upload_time desc), 
+                row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+            ) as nth_event_record
 
-    select 
-        *,
-        coalesce(
-            row_number() over (partition by _insert_id order by client_upload_time desc), 
-            row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
-        ) as nth_event_record
-
-        from event_data_raw
-    ) as duplicates
+            from event_data_raw
+        ) as duplicates
     where nth_event_record = 1
-
 ),
 
 event_type as (
@@ -131,9 +129,15 @@ event_enhanced as (
         on event_data.event_type_id = event_type.event_type_id
     left join session_data
         on event_data.unique_session_id = session_data.unique_session_id
+),
+
+final as (
+
+    select 
+        *,
+        {{ dbt_utils.surrogate_key(['unique_event_id','event_day']) }} as unique_key
+    from event_enhanced
 )
 
-select 
-    *,
-    {{ dbt_utils.surrogate_key(['unique_event_id','event_day']) }} as unique_key
-from event_enhanced
+select *
+from final
