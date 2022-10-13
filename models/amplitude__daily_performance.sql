@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='daily_unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy='merge' if target.type not in ['postgres', 'redshift'] else 'delete+insert',
+        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
         file_format = 'delta' 
     )
 }}

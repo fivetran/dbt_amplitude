@@ -127,7 +127,7 @@ models:
         description: Boolean of whether or not a session is the user's first session
 
   - name: amplitude__sessions
-    description: Each record represents a distinct session_id with aggregated metrics for that session.
+    description: Each record represents a distinct session with aggregated metrics for that session.
     columns:
       - name: unique_session_id
         description: Unique key of each session, concatenating user_id and session_id
@@ -214,4 +214,4 @@ models:
       - name: number_users
         description: Count of distinct visitors
       - name: number_new_users
-        description: Count of distinct new visitors
+        description: Count of distinct new visitors for that day
