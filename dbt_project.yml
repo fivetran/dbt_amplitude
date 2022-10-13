@@ -8,7 +8,7 @@ require-dbt-version: [">=1.0.0", "<2.0.0"]
 models:
   amplitude:
     intermediate:
-      +materialized: view # switch to ephemeral later
+      +materialized: table
       +schema: int_amplitude
     +materialized: table
     +schema: amplitude
