@@ -23,13 +23,7 @@ with event_data as (
 
 {% set end_date = run_query(end_date_query).columns[0][0]|string %}
 
-    {% if target.type == 'postgres' %}
-        {% set end_date_adjust = "cast('" ~ end_date[0:10] ~ "' as date)" %}
-
-    {% else %}
         {% set end_date_adjust =  end_date[0:10]  %}
-
-    {% endif %}
 
 {% endif %}
 
