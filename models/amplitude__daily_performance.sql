@@ -22,7 +22,7 @@ date_spine as (
     {% if is_incremental() %}
 
     -- look backward for the last year
-    where event_day >= select {{ dbt_utils.dateadd(datepart='day', interval=-364, from_date_or_timestamp="max(event_day)") }} from {{ this }}
+    where event_day >= (select {{ dbt_utils.dateadd(datepart='day', interval=-364, from_date_or_timestamp="max(event_day)") }} from {{ this }} )
 
     {% endif %}
 

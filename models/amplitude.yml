@@ -214,4 +214,4 @@ models:
       - name: number_users
         description: Count of distinct visitors
       - name: number_new_users
-        description: Count of distinct new visitors
+        description: Count of distinct new visitors for that day
