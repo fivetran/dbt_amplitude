@@ -38,16 +38,15 @@ You can also refer to the table below for a detailed view of all models material
 You will need to ensure you have the following before leveraging the dbt package.
 - **Connector**: Have the Fivetran Amplitude connector syncing data into your warehouse. 
 - **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, and **Postgres**. Ensure you are using one of these supported databases.
-  - If you are using Databricks you'll need to add the below to your `dbt_project.yml`. 
 
+### Databricks Dispatch Configuration
+If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
 ```yml
-# dbt_project.yml
-
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
 ```
-- **dbt Version**: This dbt package requires you have a functional dbt project that utilizes a dbt version within the respective range `>=1.0.0, <2.0.0`.
+
 ## Step 2: Installing the Package
 Include the following amplitude package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
@@ -136,7 +135,7 @@ packages:
 ```
 > **Note**: The Metrics package has stricter dbt version requirements. As of today, the latest version of Metrics (v0.3.5) requires dbt `[">=1.2.0-a1", "<2.0.0"]`.
 
-To utilize the Ad Reporting's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
+To utilize the Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
 ```sql
 select * 
 from {{ metrics.calculate(
@@ -188,6 +187,10 @@ packages:
 # 🙌 How is this package maintained and can I contribute?
 ## Package Maintenance
 The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/amplitude/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_amplitude/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+
+## Opinionated Decisions
+In creating this package, which is meant for a wide range of use cases, we had to take opinionated stances on a few different questions we came across during development. We've consolidated significant choices we made in the [DECISIONLOG.md](https://github.com/fivetran/dbt_amplitude/blob/main/DECISIONLOG.md), and will continue to update as the package evolves. We are always open to and encourage feedback on these choices, and the package in general.
+
 ## Contributions
 These dbt packages are developed by a small team of analytics engineers at Fivetran. However, the packages are made better by community contributions! 
 
