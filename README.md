@@ -116,6 +116,8 @@ vars:
     user_properties_to_pivot: ['user_property_1','user_property_2']
 ```
 </details>
+<br>
+
 
 ## (Optional) Step 5: Leverage dbt Metrics for Further Analysis
 <details><summary>Expand for configurations</summary>
@@ -152,6 +154,8 @@ from {{ metrics.calculate(
 ) }}
 ```
 </details>
+<br>
+
 
 ## (Optional) Step 6: Using the dbt Product Analytics package in conjunction
 <details><summary>Expand for configurations</summary>
