@@ -8,7 +8,7 @@ With the manner at which events fire and get received there is a possibility tha
 - "Now, to address this issue we recommended sending a unique identifier viz. insert identifier with each ingested event. We do deduplication of any subsequent events sent (within the last 7 days) with the same insert identifier."
 
 To add to Amplitude's de-duplication process, in the `amplitude__event_enhanced` and `amplitude__sessions` model, given that `_insert_id` is null, we de-duplicate based on events having the same following fields:
-    - `event_id`
-    - `device_id`
-    - `client_event_time`
-    - `amplitude_user_id`
+- `event_id`
+- `device_id`
+- `client_event_time`
+- `amplitude_user_id`
