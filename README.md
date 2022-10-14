@@ -95,14 +95,16 @@ models:
     amplitude_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-### Change the Date Range
+### Change the Event Date Range
+Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range (however, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables).
+
 The default date range starts at '2020-01-01' and ends one day past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
 ```yml
 # dbt_project.yml
 ...
 vars:
-    date_range_start: your_starting_date
-    date_range_end: your_ending_date
+    date_range_start: 'your_starting_date'
+    date_range_end: 'your_ending_date'
 ```
 ### Pivoting Out Nested Fields Containing Custom Properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example: `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:

@@ -15,7 +15,6 @@ with event_data_raw as (
 
     {% if is_incremental() %}
 
-    -- events are only eligible for de-duping if they occurred on the same calendar day 
     where event_time >= (select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} )
 
     {% endif %}

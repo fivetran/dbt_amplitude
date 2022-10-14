@@ -22,7 +22,7 @@ date_spine as (
     {% if is_incremental() %}
 
     -- look backward for the last year
-    where event_day >= (select {{ dbt_utils.dateadd(datepart='day', interval=-364, from_date_or_timestamp="max(event_day)") }} from {{ this }} )
+    where event_day >=  ( select max(event_day) from {{ this }})
 
     {% endif %}
 
@@ -31,7 +31,7 @@ date_spine as (
 agg_event_data as (
 
 select
-    distinct event_day,
+    event_day,
     event_type,
     count(distinct unique_event_id) as number_events,
     count(distinct unique_session_id) as number_sessions,
