@@ -152,7 +152,6 @@ from {{ metrics.calculate(
 ) }}
 ```
 </details>
-<br>
 
 ## (Optional) Step 6: Using the dbt Product Analytics package in conjunction
 <details><summary>Expand for configurations</summary>
