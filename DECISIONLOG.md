@@ -1,5 +1,6 @@
-## Amplitude_user_id
-Not all customers may be using `user_id` since the field in Amplitude is optional. Therefore for user-based metrics we decided to coalesce `user_id` and `amplitude_id`, for the case where `user_id` may be null.
+# Decision Log
+## amplitude_user_id and user_id
+Not all customers may be using `user_id` since the field in Amplitude is optional. Therefore, when handling user-based metrics we take the opinionated stance to coalesce `user_id` and `amplitude_user_id`. This way, if your Amplitude account does not utilize `user_id` you may still take advantage of user-based metrics with the `amplitude_user_id`.
 
 ## Event De-duplication logic
 With the manner at which events fire and get received there is a possibility that events are duplicated. According to [Amplitude]https://amplitude.engineering/dedupe-events-at-scale-f9e416e46ca9), events get de-duplicated based on `_insert_id`.

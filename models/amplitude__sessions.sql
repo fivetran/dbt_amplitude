@@ -36,7 +36,6 @@ event_data as (
         from event_data_raw
     ) as duplicates
     where nth_event_record = 1
-
 ),
 
 session_agg as (
