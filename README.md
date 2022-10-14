@@ -105,7 +105,7 @@ vars:
     date_range_start: 'your_starting_date'
     date_range_end: 'your_ending_date'
 ```
-### Pivoting Out Nested Fields Containing Custom Properties
+### Pivoting out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example: `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
 ```yml
 # dbt_project.yml
@@ -119,7 +119,7 @@ vars:
 <br>
 
 
-## (Optional) Step 5: Leverage dbt Metrics for Further Analysis
+## (Optional) Step 5: Leverage dbt Metrics for further analysis
 <details><summary>Expand for configurations</summary>
 
 In addition to existing final models, our Amplitude package defines common [Metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including:
@@ -139,7 +139,7 @@ packages:
 ```
 > **Note**: The Metrics package has stricter dbt version requirements. As of today, the latest version of Metrics (v0.3.5) requires dbt `[">=1.2.0-a1", "<2.0.0"]`.
 
-To utilize the Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
+To utilize Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
 ```sql
 select * 
 from {{ metrics.calculate(
@@ -157,10 +157,34 @@ from {{ metrics.calculate(
 <br>
 
 
-## (Optional) Step 6: Using the dbt Product Analytics package in conjunction
+## (Optional) Step 6: Using this package with the dbt Product Analytics package
 <details><summary>Expand for configurations</summary>
 
- <!-- complete -->
+The [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) package contains macros that allows for further exploration such as event flow, funnel, and retention analysis. To leverage this in conjunction with this package, add the following configuration to your project's `packages.yml` file:
+```yml
+packages:
+  - package: mjirv/dbt_product_analytics
+    version: [">=0.1.0"]
+```
+
+Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) usage instructions and the example below:
+```sql
+-- # product_analytics_funnel.sql
+{% set events =
+  dbt_product_analytics.event_stream(
+    from=ref('amplitude__event_enhanced'),
+    event_type_col="event_type",
+    user_id_col="amplitude_user_id",
+    date_col="event_day",
+    start_date="your_start_date",
+    end_date="your_end_date")
+%}
+
+{% set steps = ["event_type_1", "event_type_2", "event_type_3"] %}
+
+{{ dbt_product_analytics.funnel(steps=steps, event_stream=events) }}
+
+```
 
 </details>
 <br>
@@ -170,6 +194,8 @@ from {{ metrics.calculate(
 <br>
 
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran. 
+
+
 </details>
 
 # 🔍 Does this package have dependencies?
