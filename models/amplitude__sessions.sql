@@ -14,9 +14,8 @@ with event_data_raw as (
     from {{ var('event') }}
 
     {% if is_incremental() %}
-    
-    -- look back 
-    where event_time >= ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }}) 
+
+    where event_time >= ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }})
 
     {% endif %}
 ),
@@ -29,7 +28,10 @@ event_data as (
 
     select 
         *,
-        row_number() over (partition by event_id, device_id, client_event_time order by client_upload_time desc) as nth_event_record
+        coalesce(
+            row_number() over (partition by _insert_id order by client_upload_time desc), 
+            row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+        ) as nth_event_record
 
         from event_data_raw
     ) as duplicates
