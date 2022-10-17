@@ -72,7 +72,7 @@ vars:
 <details><summary>Expand for configurations</summary>
 
 ### Change source table references
-The package refers to source tables using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your destination to the respective variable: 
+If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
