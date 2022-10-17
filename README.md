@@ -13,18 +13,17 @@
 # Amplitude Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
 
 # 📣 What does this dbt package do?
-- Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schema) and builds off the output of our [Amplitude source package](https://github.com/fivetran/dbt_amplitude_source).
+- Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation) and builds off the output of our [Amplitude source package](https://github.com/fivetran/dbt_amplitude_source).
 
-- This package enables users to:
+- Enables users to do the following:
   - Leverage event data that is enhanced with additional event type and pivoted custom property fields for later downstream use
   - View aggregated metrics for each unique session
   - View aggregated metrics for each unique user
   - View daily performance metrics for each event type
   - Use the enhanced event data to leverage dbt metrics to generate additional analytics
-  - Incorporate the [dbt product analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, such as for funnel and retention analysis
+  - Incorporate the [dbt Product Analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, like for funnel and retention analysis
 
-This package also generates a comprehensive data dictionary of your source and modeled Amplitude data via the [dbt docs site](https://fivetran.github.io/dbt_amplitude/)
-You can also refer to the table below for a detailed view of all models materialized by default within this package.
+This package also generates a comprehensive data dictionary of your source and modeled Amplitude data through the [dbt docs site](https://fivetran.github.io/dbt_amplitude/). You can also refer to the table below for a detailed view of all models materialized within this package by default.
 
 |**model**|**description**
 -----|-----
@@ -34,29 +33,28 @@ You can also refer to the table below for a detailed view of all models material
 | [amplitude__daily_performance](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__daily_performance)               | Each record represents performance metrics for each distinct day and event type.
 
 # 🎯 How do I use the dbt package?
-## Step 1: Pre-Requisites
-You will need to ensure you have the following before leveraging the dbt package.
-- **Connector**: Have the Fivetran Amplitude connector syncing data into your warehouse. 
-- **Database support**: This package has been tested on **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, and **Postgres**. Ensure you are using one of these supported databases.
+## Step 1: Prerequisites
+To use this dbt package, you must have the following:
+- At least one Fivetran Amplitude connector syncing data into your destination. 
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
-### Databricks Dispatch Configuration
-If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
+### Databricks dispatch configuration
+If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml` file. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
 ```yml
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
 ```
 
-## Step 2: Installing the Package
-Include the following amplitude package version in your `packages.yml`
-> Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+## Step 2: Install the package
+Include the following Amplitude package version in your `packages.yml` file:
+> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
   - package: fivetran/amplitude
     version: [">=0.1.0", "<0.2.0"]
 ```
-## Step 3: Configure Your Variables
-### Database and Schema Variables
+## Step 3: Define database and schema variables
 By default, this package will run using your target database and the `amplitude` schema. If this is not where your Amplitude data is, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
@@ -70,11 +68,11 @@ vars:
     amplitude_schema: your_schema_name
 ```
 
-## (Optional) Step 4: Additional Configurations
+## (Optional) Step 4: Additional configurations
 <details><summary>Expand for configurations</summary>
 
-### Change the Source Table References
-Source tables are referenced using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your warehouse to the respective variable: 
+### Change source table references
+The package refers to source tables using default names. If an individual source table has a different name than expected, provide the name of the table as it appears in your destination to the respective variable: 
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
@@ -85,7 +83,7 @@ vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 
-### Change the Build Schema
+### Change build schema
 By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_amplitude`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
@@ -94,8 +92,8 @@ models:
     amplitude_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-### Change the Event Date Range
-Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range (however, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables).
+### Change event date range
+Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
 
 The default date range starts at '2020-01-01' and ends one day past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
 ```yml
@@ -105,8 +103,8 @@ vars:
     date_range_start: 'your_starting_date'
     date_range_end: 'your_ending_date'
 ```
-### Pivoting out nested fields containing custom properties
-The Amplitude schema allows for custom properties to be passed as nested fields (for example: `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
+### Pivot out nested fields containing custom properties
+The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
 ```yml
 # dbt_project.yml
 ...
@@ -119,25 +117,25 @@ vars:
 <br>
 
 
-## (Optional) Step 5: Leverage dbt Metrics for further analysis
+## (Optional) Step 5: Leverage dbt metrics for further analysis
 <details><summary>Expand for configurations</summary>
 
-In addition to existing final models, our Amplitude package defines common [Metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including:
+In addition to the existing final models, our Amplitude package defines common [metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including the following:
 - total_events
 - average_session_length
 - total_sessions
 - total_users
 - average_time_in_between_sessions
 
-You can find the supported dimensions and full definitions of these metrics [here](https://github.com/fivetran/dbt_ad_reporting/blob/main/models/ad_reporting_metrics.yml).
+You can find the supported dimensions and full definitions of these metrics [in the `ad_reporting_metrics.yml` file](https://github.com/fivetran/dbt_ad_reporting/blob/main/models/ad_reporting_metrics.yml).
 
-To use dbt Metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
+To use dbt metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
 ```yml
 packages:
   - package: dbt-labs/metrics
     version: [">=0.3.0", "<0.4.0"]
 ```
-> **Note**: The Metrics package has stricter dbt version requirements. As of today, the latest version of Metrics (v0.3.5) requires dbt `[">=1.2.0-a1", "<2.0.0"]`.
+> NOTE: The metrics package has stricter dbt version requirements. The latest version of metrics (v0.3.5) currently requires dbt `[">=1.2.0-a1", "<2.0.0"]`.
 
 To utilize Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
 ```sql
