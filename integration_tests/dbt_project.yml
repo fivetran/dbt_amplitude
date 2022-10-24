@@ -17,7 +17,7 @@ vars:
   amplitude_source:
     amplitude_event_identifier: "amplitude_event_data"
     amplitude_event_type_identifier: "amplitude_event_type_data"
-    amplitude_schema: amplitude_integration_tests_2
+    amplitude_schema: amplitude_integration_tests_1
 
 seeds:
   amplitude_integration_tests:
