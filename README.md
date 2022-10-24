@@ -29,7 +29,7 @@ You can also refer to the table below for a detailed view of all models material
 |**model**|**description**
 -----|-----
 | [amplitude__event_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__event_enhanced)     | Each record represents event data, enhanced with event type data and unnested event, group, and user properties. 
-| [amplitude__session_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__session_enhanced)         | Each record represents a distinct session with aggregated metrics for that session.
+| [amplitude__sessions](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__sessions)         | Each record represents a distinct session with aggregated metrics for that session.
 | [amplitude__user_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__user_enhanced)               | Each record represents a distinct user with aggregated metrics for that user.
 | [amplitude__daily_performance](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__daily_performance)               | Each record represents performance metrics for each distinct day and event type.
 
@@ -137,7 +137,7 @@ packages:
   - package: dbt-labs/metrics
     version: [">=0.3.0", "<0.4.0"]
 ```
-> **Note**: The Metrics package has stricter dbt version requirements. As of today, the latest version of Metrics (v0.3.5) requires dbt `[">=1.2.0-a1", "<2.0.0"]`.
+> **Note**: The [metrics package](https://github.com/dbt-labs/dbt_metrics) has stricter dbt version requirements, so check accordingly.
 
 To utilize Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
 ```sql
