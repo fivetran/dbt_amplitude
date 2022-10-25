@@ -52,7 +52,7 @@ Include the following amplitude package version in your `packages.yml`
 > Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
-  - package: fivetran/amplitude
+  - package: fivetran/dbt_amplitude
     version: [">=0.1.0", "<0.2.0"]
 ```
 ## Step 3: Configure Your Variables
