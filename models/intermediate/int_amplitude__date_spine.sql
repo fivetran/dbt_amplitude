@@ -18,7 +18,7 @@ with event_data as (
 {% if execute %}
 {% set end_date_query %}
     -- select one day past current day
-    select  {{ dbt_utils.dateadd("day", 1, dbt_utils.date_trunc("day", dbt_utils.current_timestamp())) }}
+    select  {{ dbt.dateadd("day", 1, dbt.date_trunc("day", dbt.current_timestamp())) }}
 {% endset %}
 
 {% set end_date = run_query(end_date_query).columns[0][0]|string %}
