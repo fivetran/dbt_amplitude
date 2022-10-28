@@ -53,8 +53,7 @@ date_spine as (
     select
         distinct event_data.event_type,
         cast(spine.date_day as date) as event_day,
-        {{ dbt_utils.surrogate_key(['spine.date_day','event_data.event_type']) }} as date_spine_unique_key
-
+        {{ dbt_utils.generate_surrogate_key(['spine.date_day','event_data.event_type']) }} as date_spine_unique_key
     from spine 
     join event_data
         on spine.date_day >= event_data.event_day -- each event_type will have a record for every day since their first day
