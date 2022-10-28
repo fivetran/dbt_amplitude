@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='unique_session_id',
         partition_by={"field": "session_started_at_day", "data_type": "timestamp"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
-        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert'
+        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
         file_format = 'delta'
         )
 }}
