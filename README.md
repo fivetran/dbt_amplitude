@@ -136,7 +136,7 @@ packages:
     version: [">=0.3.0", "<0.4.0"]
 ```
 
-> NOTE: The [metrics package](https://github.com/dbt-labs/dbt_metrics) has stricter dbt version requirements, so please check.
+> NOTE: The [metrics package](https://github.com/dbt-labs/dbt_metrics) has stricter dbt version requirements, so please check those requirements.
 
 To utilize Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
 ```sql
