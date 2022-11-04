@@ -8,14 +8,22 @@
         )
 }}
 
-with event_data_raw as (
+with max_date as (
+    
+    select 
+        cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) as max_date
+    
+    from {{ this }} 
+)
+
+, event_data_raw as (
 
     select *
-    from {{ var('event') }}
+    from {{ var('event') }}, max_date
 
     {% if is_incremental() %}
 
-    where event_time >= ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }})
+    where event_time >= max_date.max_date
 
     {% endif %}
 ),
