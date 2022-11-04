@@ -16,4 +16,6 @@ cd integration_tests
 dbt deps
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
+dbt run --vars '{amplitude__user_id_enabled: false}' --target "$db" --full-refresh
+dbt run --target "$db"
 dbt test --target "$db"
