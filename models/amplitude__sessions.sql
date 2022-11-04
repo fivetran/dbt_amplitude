@@ -11,7 +11,7 @@
 with max_date as (
     
     select 
-        cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) as max_date
+        cast (  max({{ dbt_utils.date_trunc('day', 'session_ended_at') }})  as {{ dbt_utils.type_timestamp() }} ) as max_date
     
     from {{ this }} 
 )
