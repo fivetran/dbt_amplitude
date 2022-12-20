@@ -7,8 +7,8 @@ metrics:
     description: Count of events 
     model: ref('amplitude__event_enhanced')
 
-    type: count_distinct
-    sql: unique_event_id
+    calculation_method: count_distinct
+    expression: unique_event_id
 
     timestamp: event_time
     time_grains: [day, week, month, quarter, year]
@@ -36,8 +36,8 @@ metrics:
     description: Average duration of a session
     model: ref('amplitude__event_enhanced')
 
-    type: average
-    sql: session_length
+    calculation_method: average
+    expression: session_length
 
     timestamp: event_time
     time_grains: [day, week, month, quarter, year]
@@ -64,8 +64,8 @@ metrics:
     description: Count of sessions 
     model: ref('amplitude__event_enhanced')
 
-    type: count_distinct
-    sql: unique_session_id
+    calculation_method: count_distinct
+    expression: unique_session_id
 
     timestamp: event_time
     time_grains: [day, week, month, quarter, year]
@@ -92,8 +92,8 @@ metrics:
     description: Count of Users 
     model: ref('amplitude__event_enhanced')
 
-    type: count_distinct
-    sql: amplitude_user_id
+    calculation_method: count_distinct
+    expression: amplitude_user_id
 
     timestamp: event_time
     time_grains: [day, week, month, quarter, year]
@@ -120,8 +120,8 @@ metrics:
     description: Average duration in between sessions in seconds
     model: ref('amplitude__event_enhanced')
 
-    type: average
-    sql: seconds_in_between_sessions
+    calculation_method: average
+    expression: seconds_in_between_sessions
 
     timestamp: event_time
     time_grains: [day, week, month, quarter, year]

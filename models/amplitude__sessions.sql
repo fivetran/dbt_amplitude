@@ -15,7 +15,7 @@ with event_data_raw as (
 
     {% if is_incremental() %}
 
-    where event_time >= ( select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }})
+    where event_time >= ( select cast (  max({{ dbt.date_trunc('day', 'event_time') }})  as {{ dbt.type_timestamp() }} ) from {{ this }})
 
     {% endif %}
 ),
@@ -46,7 +46,7 @@ session_agg as (
         count(event_id) as events_per_session,
         min(event_time) as session_started_at,
         max(event_time) as session_ended_at,
-        {{ dbt_utils.datediff('min(event_time)', 'max(event_time)', 'second') }} / 60 as session_length_in_minutes
+        {{ dbt.datediff('min(event_time)', 'max(event_time)', 'second') }} / 60 as session_length_in_minutes
     from event_data
     {{ dbt_utils.group_by(2) }}
 ),
@@ -60,8 +60,8 @@ session_ranking as (
         session_started_at,
         session_ended_at,
         session_length_in_minutes,
-        {{ dbt_utils.date_trunc('day', 'session_started_at') }} as session_started_at_day,
-        {{ dbt_utils.date_trunc('day', 'session_ended_at') }} as session_ended_at_day,
+        {{ dbt.date_trunc('day', 'session_started_at') }} as session_started_at_day,
+        {{ dbt.date_trunc('day', 'session_ended_at') }} as session_ended_at_day,
         case 
             when user_id is not null then row_number() over (partition by user_id order by session_started_at) 
             else null
@@ -91,7 +91,7 @@ select
         else 0
     end as is_first_user_session,
     case
-        when user_id is not null then {{ dbt_utils.datediff('last_session_ended_at', 'session_started_at', 'second') }} / 60
+        when user_id is not null then {{ dbt.datediff('last_session_ended_at', 'session_started_at', 'second') }} / 60
         else null
     end as minutes_in_between_sessions
 from session_lag

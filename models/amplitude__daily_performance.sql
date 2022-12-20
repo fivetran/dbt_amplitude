@@ -35,7 +35,7 @@ agg_event_data as (
         count(distinct unique_session_id) as number_sessions,
         count(distinct amplitude_user_id) as number_users,
         count(distinct 
-                (case when cast( {{ dbt_utils.date_trunc('day', 'user_creation_time') }} as date) = event_day
+                (case when cast( {{ dbt.date_trunc('day', 'user_creation_time') }} as date) = event_day
             then amplitude_user_id end)) as number_new_users 
     from event_enhanced
     group by 1,2
@@ -65,7 +65,7 @@ final as (
         coalesce(number_sessions,0) as number_sessions,
         coalesce(number_users,0) as number_users,
         coalesce(number_new_users,0) as number_new_users,
-        {{ dbt_utils.surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
+        {{ dbt_utils.generate_surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
     from spine_joined
 
     {% if is_incremental() %}

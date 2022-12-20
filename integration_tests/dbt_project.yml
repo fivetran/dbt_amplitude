@@ -1,13 +1,13 @@
 config-version: 2
 
 name: 'amplitude_integration_tests'
-version: '0.1.0'
+version: '0.2.0'
 config-version: 2
 profile: 'integration_tests'
 
 dispatch:
   - macro_namespace: dbt_utils
-    search_order: [spark_utils, dbt_utils]
+    search_order: ['spark_utils', 'dbt_utils']
 
 models:
   amplitude:
@@ -17,7 +17,7 @@ vars:
   amplitude_source:
     amplitude_event_identifier: "amplitude_event_data"
     amplitude_event_type_identifier: "amplitude_event_type_data"
-    amplitude_schema: amplitude_integration_tests_1
+    amplitude_schema: amplitude_integration_tests_3
 
 seeds:
   amplitude_integration_tests:

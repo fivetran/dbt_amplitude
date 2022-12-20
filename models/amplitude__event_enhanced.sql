@@ -15,7 +15,7 @@ with event_data_raw as (
 
     {% if is_incremental() %}
 
-    where event_time >= (select cast (  max({{ dbt_utils.date_trunc('day', 'event_time') }})  as {{ dbt_utils.type_timestamp() }} ) from {{ this }} )
+    where event_time >= (select cast (  max({{ dbt.date_trunc('day', 'event_time') }})  as {{ dbt.type_timestamp() }} ) from {{ this }} )
 
     {% endif %}
 ),
@@ -54,11 +54,11 @@ event_enhanced as (
     select
         event_data.unique_event_id
         , event_data.unique_session_id
-        , cast(event_data.amplitude_user_id as {{ dbt_utils.type_string() }}) as amplitude_user_id
+        , cast(event_data.amplitude_user_id as {{ dbt.type_string() }}) as amplitude_user_id
         , event_data.event_id
         , event_data.event_type
         , event_data.event_time
-        , cast( {{ dbt_utils.date_trunc('day', 'event_time') }} as date) as event_day
+        , cast( {{ dbt.date_trunc('day', 'event_time') }} as date) as event_day
 
         {% if var('event_properties_to_pivot') %},
         {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
@@ -75,7 +75,7 @@ event_enhanced as (
         {{ fivetran_utils.pivot_json_extract(string = 'group_properties', list_of_properties = var('group_properties_to_pivot')) }}
         {% endif %}
 
-        , cast(event_data.user_id as {{ dbt_utils.type_string() }}) as user_id
+        , cast(event_data.user_id as {{ dbt.type_string() }}) as user_id
         , event_data.user_creation_time
 
         {% if var('user_properties_to_pivot') %},
@@ -134,7 +134,7 @@ final as (
 
     select 
         *,
-        {{ dbt_utils.surrogate_key(['unique_event_id','event_day']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['unique_event_id','event_day']) }} as unique_key
     from event_enhanced
 )
 
