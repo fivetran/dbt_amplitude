@@ -127,7 +127,7 @@ In addition to the existing final models, our Amplitude package defines common [
 - total_users
 - average_time_in_between_sessions
 
-You can find the supported dimensions and full definitions of these metrics [in the `ad_reporting_metrics.yml` file](https://github.com/fivetran/dbt_ad_reporting/blob/main/models/ad_reporting_metrics.yml).
+You can find the supported dimensions and full definitions of these metrics [in the `amplitude_metrics.yml` file](https://github.com/fivetran/amplitude/blob/main/models/amplitude_metrics.yml).
 
 To use dbt metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
 ```yml
