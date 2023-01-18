@@ -5,9 +5,7 @@ require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
   amplitude:
     intermediate:
-      +materialized: table
       +schema: int_amplitude
-    +materialized: table
     +schema: amplitude
 vars:
   amplitude:
