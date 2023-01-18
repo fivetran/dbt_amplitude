@@ -1,3 +1,11 @@
+# dbt_amplitude v0.3.0
+
+## 🚨 Breaking Changes 🚨:
+[PR #9](https://github.com/fivetran/dbt_amplitude/pull/9) includes the following changes:
+- Remove the configuration that materializes all models as tables, which caused the incremental logic within the models to be ignored.
+- Add an additional dbt run to integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
+- Alias the aggregate function in the incremental logic to address Snowflake error when handling a potential recursive relationship
+
 # dbt_amplitude v0.2.0
 
 ## 🚨 Breaking Changes 🚨:
