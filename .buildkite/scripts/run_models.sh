@@ -19,6 +19,5 @@ dbt deps
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
-dbt seed
 dbt run --target "$db"
 dbt test --target "$db"
