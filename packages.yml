@@ -1,3 +1,5 @@
 packages:
-- package: fivetran/amplitude_source
-  version: [">=0.2.0", "<0.3.0"]
+# - package: fivetran/amplitude_source
+#   version: [">=0.2.0", "<0.3.0"]
+
+  - local: ../dbt_amplitude_source
