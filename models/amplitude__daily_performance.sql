@@ -21,7 +21,7 @@ date_spine as (
 
     {% if is_incremental() %}
 
-    where event_day >=  ( select max(event_day) from {{ this }})
+    where event_day >=  ( select max(event_day) from {{ this }} as this)
 
     {% endif %}
 ), 
