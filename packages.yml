@@ -1,5 +1,7 @@
 packages:
 # - package: fivetran/amplitude_source
 #   version: [">=0.2.0", "<0.3.0"]
+- git: https://github.com/fivetran/dbt_amplitude_source.git
+  revision: add_event_day
+  warn-unpinned: false
 
-  - local: ../dbt_amplitude_source
