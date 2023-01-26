@@ -15,7 +15,7 @@ with event_data_raw as (
 
     {% if is_incremental() %}
 
-    where events.event_time >= coalesce((select cast(max(event_day) as {{ dbt.type_timestamp() }} ) from {{ this }} as this), '2023-01-23')
+    where events.event_time >= coalesce((select max(event_day) from {{ this }} as this), '2023-01-23')
 
     {% endif %}
 ),
