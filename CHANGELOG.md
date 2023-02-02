@@ -3,8 +3,8 @@
 ## 🚨 Breaking Changes 🚨:
 [PR #9](https://github.com/fivetran/dbt_amplitude/pull/9) includes the following changes:
 - Remove the configuration that materializes all models as tables, which caused the incremental logic within the models to be ignored.
-- Add an additional dbt run to integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
-- Alias the aggregate function in the incremental logic to address Snowflake error when handling a potential recursive relationship
+- Add an additional dbt run to our integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
+- Move the recursive subquery in the incremental logic in `int_amplitude__date_spine`, `amplitude__daily_performance`, `amplitude__event_enhanced`, `amplitude__sessions` into its own CTE to address warehouses errors that arise when handling a potential recursive relationship
 
 # dbt_amplitude v0.2.0
 

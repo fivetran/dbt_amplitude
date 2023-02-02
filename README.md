@@ -52,7 +52,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.2.0", "<0.3.0"]
+    version: [">=0.3.0", "<0.4.0"]
 ```
 ## Step 3: Define database and schema variables
 By default, this package will run using your target database and the `amplitude` schema. If this is not where your Amplitude data is, add the following configuration to your root `dbt_project.yml` file:
@@ -100,8 +100,8 @@ The default date range starts at '2020-01-01' and ends one day past the current 
 # dbt_project.yml
 ...
 vars:
-    date_range_start: 'your_starting_date'
-    date_range_end: 'your_ending_date'
+    date_range_start: '2022-01-01' # your start date here
+    date_range_end: '2022-01-15' # your end date here
 ```
 ### Pivot out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
@@ -127,7 +127,7 @@ In addition to the existing final models, our Amplitude package defines common [
 - total_users
 - average_time_in_between_sessions
 
-You can find the supported dimensions and full definitions of these metrics [in the `ad_reporting_metrics.yml` file](https://github.com/fivetran/dbt_ad_reporting/blob/main/models/ad_reporting_metrics.yml).
+You can find the supported dimensions and full definitions of these metrics [in the `amplitude_metrics.yml` file](https://github.com/fivetran/amplitude/blob/main/models/amplitude_metrics.yml).
 
 To use dbt metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
 ```yml
@@ -203,7 +203,7 @@ This dbt package is dependent on the following dbt packages. Please be aware tha
 ```yml
 packages:
     - package: fivetran/amplitude_source
-      version: [">=0.2.0", "<0.3.0"]
+      version: [">=0.3.0", "<0.4.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
