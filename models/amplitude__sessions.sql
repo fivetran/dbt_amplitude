@@ -8,14 +8,28 @@
         )
 }}
 
-with event_data_raw as (
+with 
+
+{% if is_incremental() %}
+    
+    max_date as (
+
+    select max(session_started_at) as max_session_started_at
+    from {{ this }} 
+
+    ),
+
+{% endif %}
+    
+event_data_raw as (
 
     select *
-    from {{ var('event') }} as events
+    from {{ var('event') }}
 
     {% if is_incremental() %}
+        , max_date
 
-    having events.event_time >= coalesce((select cast(max(event_day) as {{ dbt.type_timestamp() }} ) from {{ this }} as this), '2010-01-01')
+        where event_time >= max_date.max_session_started_at
 
     {% endif %}
 ),
