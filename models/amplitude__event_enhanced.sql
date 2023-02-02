@@ -58,7 +58,7 @@ event_enhanced as (
         , event_data.event_id
         , event_data.event_type
         , event_data.event_time
-        , cast( {{ dbt.date_trunc('day', 'event_time') }} as date) as event_day
+        , event_data.event_day
 
         {% if var('event_properties_to_pivot') %},
         {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
