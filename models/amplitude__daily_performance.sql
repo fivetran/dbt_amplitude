@@ -14,14 +14,25 @@ with event_enhanced as (
     from {{ ref('amplitude__event_enhanced') }}
 ),
 
+{% if is_incremental() %}
+    
+    max_date as (
+
+    select max(event_day) as max_event_day
+    from {{ this }} 
+
+    ),
+
+{% endif %}
+
 date_spine as (
     
     select *
     from {{ ref('int_amplitude__date_spine') }}
 
     {% if is_incremental() %}
-
-    where event_day >=  ( select max(event_day) from {{ this }} as this)
+        , max_date
+        where event_day >= max_date.max_event_day
 
     {% endif %}
 ), 

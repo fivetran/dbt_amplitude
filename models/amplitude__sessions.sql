@@ -28,7 +28,6 @@ event_data_raw as (
 
     {% if is_incremental() %}
         , max_date
-
         where event_time >= max_date.max_session_started_at
 
     {% endif %}

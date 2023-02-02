@@ -27,6 +27,19 @@ with event_data as (
 
 {% endif %}
 
+
+{% if is_incremental() %}
+    
+    max_date as (
+
+    select max(event_day) as max_event_day
+    from {{ this }} 
+
+    ),
+
+{% endif %}
+
+
 spine as (
 
     select * 
@@ -41,8 +54,8 @@ spine as (
     ) as spine
 
     {% if is_incremental() %} 
-    
-    where date_day > ( select max(date_day) from {{ this }} )
+        , max_date
+        where date_day >= max_date.max_event_day
     
     {% endif %}
 ),
