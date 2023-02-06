@@ -16,12 +16,12 @@ with event_enhanced as (
 
 {% if is_incremental() %}
     
-    max_date as (
+max_date as (
 
     select max(event_day) as max_event_day
     from {{ this }} 
 
-    ),
+),
 
 {% endif %}
 

@@ -12,12 +12,12 @@ with
 
 {% if is_incremental() %}
     
-    max_date as (
+max_date as (
 
     select max(session_started_at) as max_session_started_at
     from {{ this }} 
 
-    ),
+),
 
 {% endif %}
     

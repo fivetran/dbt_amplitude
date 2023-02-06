@@ -2,9 +2,16 @@
 ## 🚨 Breaking Changes 🚨:
 [PR #9](https://github.com/fivetran/dbt_amplitude/pull/9) includes the following changes:
 - Removal of the configuration within the dbt_project.yml that erroneously materialized all models as tables. The models will now properly run incrementally following the initial run.
-- Add an additional dbt run to our integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
-- Move the recursive subquery in the incremental logic in `int_amplitude__date_spine`, `amplitude__daily_performance`, `amplitude__event_enhanced`, `amplitude__sessions` into its own CTE to address warehouses errors that arise when handling a recursive relationship
+- Removal of the recursive subqueries within model incremental logic. These subqueries have been reformatted into their own CTE's to address warehouses errors that arise when handling a potential recursive relationship. The incremental logic have been updated in the following models:
+   - `int_amplitude__date_spine`
+   - `amplitude__daily_performance`
+   - `amplitude__event_enhanced`
+   - `amplitude__sessions`
+
 - Change the coalesce clause used for deduplicating events to a case-when statement. This assures that for the scenario where `_insert_id` is null, that those respective records are not being considered and grouped as 1 event.
+
+## Under the Hood
+- Add an additional dbt run to our integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
 
 # dbt_amplitude v0.2.0
 
