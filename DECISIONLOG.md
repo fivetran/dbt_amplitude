@@ -12,3 +12,5 @@ To add to Amplitude's de-duplication process, in the `amplitude__event_enhanced`
 - `device_id`
 - `client_event_time`
 - `amplitude_user_id`
+
+We then order the respective records with same aforementioned fields by `client_upload_time` and filter for the most recent. The reason we select records using `client_upload_time` is there may be a lag between `client_event_time` and `client_upload_time`, such as when the client's device is on airplane mode. Please refer to [Amplitude's documentation](https://help.amplitude.com/hc/en-us/articles/229313067#Raw-Data-Fields) for more.
