@@ -27,8 +27,8 @@ max_date as (
 
 date_spine as (
     
-    select *
-    from {{ ref('int_amplitude__date_spine') }}
+    select spine.*
+    from {{ ref('int_amplitude__date_spine') }} as spine
 
     {% if is_incremental() %}
         , max_date

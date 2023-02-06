@@ -23,8 +23,8 @@ max_date as (
 
 event_data_raw as (
 
-    select *
-    from {{ var('event') }}
+    select events.*
+    from {{ var('event') }} as events
 
     {% if is_incremental() %}
         , max_date
@@ -43,7 +43,7 @@ event_data as (
             case when _insert_id is not null
                 then row_number() over (partition by _insert_id order by client_upload_time desc)
                 else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
-            end as nth_event_recordd
+            end as nth_event_record
 
         from event_data_raw
         ) as duplicates

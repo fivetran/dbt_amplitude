@@ -67,8 +67,20 @@ vars:
     amplitude_database: your_database_name    
     amplitude_schema: your_schema_name
 ```
+## Step 4: Change event date range
+Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
 
-## (Optional) Step 4: Additional configurations
+The default date range starts at '2020-01-01' and ends one day past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+```yml
+# dbt_project.yml
+...
+vars:
+    amplitude:
+      date_range_start: '2022-01-01' # your start date here
+      date_range_end: '2022-12-01' # your end date here
+```
+If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
+## (Optional) Step 5: Additional configurations
 <details><summary>Expand for configurations</summary>
 
 ### Change source table references
@@ -92,17 +104,6 @@ models:
     amplitude_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-### Change event date range
-Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
-
-The default date range starts at '2020-01-01' and ends one day past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
-```yml
-# dbt_project.yml
-...
-vars:
-    date_range_start: '2022-01-01' # your start date here
-    date_range_end: '2022-01-15' # your end date here
-```
 ### Pivot out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
 ```yml
@@ -117,7 +118,7 @@ vars:
 <br>
 
 
-## (Optional) Step 5: Leverage dbt metrics for further analysis
+## (Optional) Step 6: Leverage dbt metrics for further analysis
 <details><summary>Expand for configurations</summary>
 
 In addition to the existing final models, our Amplitude package defines common [metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including the following:
@@ -156,7 +157,7 @@ from {{ metrics.calculate(
 <br>
 
 
-## (Optional) Step 6: Using this package with the dbt Product Analytics package
+## (Optional) Step 7: Using this package with the dbt Product Analytics package
 <details><summary>Expand for configurations</summary>
 
 The [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) package contains macros that allows for further exploration such as event flow, funnel, and retention analysis. To leverage this in conjunction with this package, add the following configuration to your project's `packages.yml` file:
@@ -188,7 +189,7 @@ Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analyt
 </details>
 <br>
 
-## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+## (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
 

@@ -42,7 +42,7 @@ max_date as (
 
 spine as (
 
-    select * 
+    select spine.* 
 
     from (
         {{ dbt_utils.date_spine(
