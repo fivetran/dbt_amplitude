@@ -12,7 +12,6 @@
 
 ## Under the Hood
 - Add an additional dbt run to our integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
-- Update the date spine (`int_amplitude__date_spine`) to have the last date be one month past the current day to act as a buffer.
 
 # dbt_amplitude v0.2.0
 
