@@ -17,8 +17,8 @@ with event_data as (
 -- create end_date_adjust variable
 {% if execute %}
 {% set end_date_query %}
-    -- select one month past current day
-    select  {{ dbt.dateadd("month", 1, dbt.date_trunc("day", dbt.current_timestamp_backcompat())) }}
+    -- select one day past current day
+    select  {{ dbt.dateadd("day", 1, dbt.date_trunc("day", dbt.current_timestamp_backcompat())) }}
 {% endset %}
 
 {% set end_date = run_query(end_date_query).columns[0][0]|string %}
