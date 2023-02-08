@@ -11,6 +11,8 @@
    - `amplitude__sessions`
 
 - Change the coalesce clause used for deduplicating events to a case-when statement. This assures that for the scenario where `_insert_id` is null, that those respective records are not being considered and grouped as 1 event.
+- Please note, a `dbt run --full-refresh` will be required after upgrading to this version in order to capture the updates.
+
 
 ## Under the Hood
 - Add an additional dbt run to our integration testing so that we're not just running on fresh data, and so that the second run uses the same data and runs with the incremental strategy. 
