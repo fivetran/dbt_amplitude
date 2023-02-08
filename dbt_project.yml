@@ -14,5 +14,3 @@ vars:
     event_properties_to_pivot: []  # list of events properties from the event table (in the event source table, event_properties)  to pivot out into columns in amplitude__event_enhanced
     group_properties_to_pivot: []  # list of group properties from the event table (in the event source table, group_properties)  to pivot out into columns in amplitude__event_enhanced
     user_properties_to_pivot: []  # list of user properties from the event table (in the event source table, user_properties)  to pivot out into columns in amplitude__event_enhanced
-
-    date_range_start: '2020-01-01'

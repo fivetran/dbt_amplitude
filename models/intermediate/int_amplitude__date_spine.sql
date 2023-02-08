@@ -47,8 +47,8 @@ spine as (
     from (
         {{ dbt_utils.date_spine(
             datepart = "day", 
-            start_date =  "cast('" ~ var('date_range_start',  '2010-01-01') ~ "' as date)", 
-            end_date = "cast('" ~ var('date_range_end',  end_date_adjust) ~ "' as date)" 
+            start_date =  "cast('" ~ var('amplitude__date_range_start',  '2020-01-01') ~ "' as date)", 
+            end_date = "cast('" ~ var('amplitude__date_range_end',  end_date_adjust) ~ "' as date)" 
             )
         }} 
     ) as spine

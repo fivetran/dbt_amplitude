@@ -1,6 +1,8 @@
 # dbt_amplitude v0.3.0
 ## 🚨 Breaking Changes 🚨:
 [PR #9](https://github.com/fivetran/dbt_amplitude/pull/9) includes the following changes:
+- Rename `date_range_start` and `date_range_end` variables to `amplitude__date_range_start` and `amplitude__date_range_end` and make them global variables.
+- The date range filter using `amplitude__date_range_start` and `amplitude__date_range_end` variables have been moved further upstream to `stg_amplitude__event`. 
 - Removal of the configuration within the dbt_project.yml that erroneously materialized all models as tables. The models will now properly run incrementally following the initial run.
 - Removal of the recursive subqueries within model incremental logic. These subqueries have been reformatted into their own CTE's to address warehouses errors that arise when handling a potential recursive relationship. The incremental logic have been updated in the following models:
    - `int_amplitude__date_spine`
