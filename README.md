@@ -75,9 +75,8 @@ The default date range starts at '2020-01-01' and ends one month past the curren
 # dbt_project.yml
 ...
 vars:
-    amplitude:
-      date_range_start: '2022-01-01' # your start date here
-      date_range_end: '2022-12-01' # your end date here
+    date_range_start: '2022-01-01' # your start date here
+    date_range_end: '2022-12-01' # your end date here
 ```
 If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
 ## (Optional) Step 5: Additional configurations
