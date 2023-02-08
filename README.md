@@ -70,7 +70,7 @@ vars:
 ## Step 4: Configure event date range
 Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
 
-The default date range starts at '2020-01-01' and ends one month past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+The default date range for the [stg_amplitude__event](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) model starts at '2020-01-01' and ends one month past the current day. Conversely, for the [date spine](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) model in this package the default date range starts at `2020-01-01` and ends one day after the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
 ```yml
 # dbt_project.yml
 ...
