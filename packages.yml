@@ -1,7 +1,4 @@
 packages:
-# - package: fivetran/amplitude_source
-#   version: [">=0.2.0", "<0.3.0"]
-- git: https://github.com/fivetran/dbt_amplitude_source.git
-  revision: feature/filter_records_by_event_time
-  warn-unpinned: false
+ - package: fivetran/amplitude_source
+   version: [">=0.3.0", "<0.4.0"]
 
