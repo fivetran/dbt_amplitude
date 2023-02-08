@@ -8,14 +8,27 @@
         )
 }}
 
-with event_data_raw as (
+with 
 
-    select *
-    from {{ var('event') }}
+{% if is_incremental() %}
+    
+max_date as (
+
+    select max(session_started_at) as max_session_started_at
+    from {{ this }} 
+
+),
+
+{% endif %}
+    
+event_data_raw as (
+
+    select events.*
+    from {{ var('event') }} as events
 
     {% if is_incremental() %}
-
-    where event_time >= ( select cast (  max({{ dbt.date_trunc('day', 'event_time') }})  as {{ dbt.type_timestamp() }} ) from {{ this }})
+        , max_date
+        where event_time >= max_date.max_session_started_at
 
     {% endif %}
 ),
@@ -25,16 +38,15 @@ event_data as (
     
     select * 
     from (
-
-    select 
-        *,
-        coalesce(
-            row_number() over (partition by _insert_id order by client_upload_time desc), 
-            row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
-        ) as nth_event_record
+        select 
+            *,
+            case when _insert_id is not null
+                then row_number() over (partition by _insert_id order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+            end as nth_event_record
 
         from event_data_raw
-    ) as duplicates
+        ) as duplicates
     where nth_event_record = 1
 ),
 

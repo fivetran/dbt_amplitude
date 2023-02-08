@@ -8,14 +8,27 @@
         )
 }}
 
-with event_data_raw as (
+with 
 
-    select *
-    from {{ var('event') }}
+{% if is_incremental() %}
+    
+max_date as (
+
+    select max(event_day) as max_event_day
+    from {{ this }} 
+
+),
+
+{% endif %}
+
+event_data_raw as (
+
+    select events.*
+    from {{ var('event') }} as events
 
     {% if is_incremental() %}
-
-    where event_time >= (select cast (  max({{ dbt.date_trunc('day', 'event_time') }})  as {{ dbt.type_timestamp() }} ) from {{ this }} )
+        , max_date
+        where event_day >= max_date.max_event_day
 
     {% endif %}
 ),
@@ -27,12 +40,12 @@ event_data as (
     from (
         select 
             *,
-            coalesce(
-                row_number() over (partition by _insert_id order by client_upload_time desc), 
-                row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
-            ) as nth_event_record
+            case when _insert_id is not null
+                then row_number() over (partition by _insert_id order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+            end as nth_event_record
 
-            from event_data_raw
+        from event_data_raw
         ) as duplicates
     where nth_event_record = 1
 ),
@@ -58,7 +71,7 @@ event_enhanced as (
         , event_data.event_id
         , event_data.event_type
         , event_data.event_time
-        , cast( {{ dbt.date_trunc('day', 'event_time') }} as date) as event_day
+        , event_data.event_day
 
         {% if var('event_properties_to_pivot') %},
         {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}

@@ -18,7 +18,7 @@ with event_data as (
 {% if execute %}
 {% set end_date_query %}
     -- select one day past current day
-    select  {{ dbt.dateadd("day", 1, dbt.date_trunc("day", dbt.current_timestamp())) }}
+    select  {{ dbt.dateadd("day", 1, dbt.date_trunc("day", dbt.current_timestamp_backcompat())) }}
 {% endset %}
 
 {% set end_date = run_query(end_date_query).columns[0][0]|string %}
@@ -27,22 +27,35 @@ with event_data as (
 
 {% endif %}
 
+
+{% if is_incremental() %}
+    
+max_date as (
+
+    select max(event_day) as max_event_day
+    from {{ this }} 
+
+),
+
+{% endif %}
+
+
 spine as (
 
-    select * 
+    select spine.* 
 
     from (
         {{ dbt_utils.date_spine(
             datepart = "day", 
-            start_date =  "cast('" ~ var('date_range_start',  '2010-01-01') ~ "' as date)", 
-            end_date = "cast('" ~ var('date_range_end',  end_date_adjust) ~ "' as date)" 
+            start_date =  "cast('" ~ var('amplitude__date_range_start',  '2020-01-01') ~ "' as date)", 
+            end_date = "cast('" ~ var('amplitude__date_range_end',  end_date_adjust) ~ "' as date)" 
             )
         }} 
     ) as spine
 
     {% if is_incremental() %} 
-    
-    where date_day > ( select max(date_day) from {{ this }} )
+        , max_date
+        where date_day > max_date.max_event_day
     
     {% endif %}
 ),

@@ -52,7 +52,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.2.0", "<0.3.0"]
+    version: [">=0.3.0", "<0.4.0"]
 ```
 ## Step 3: Define database and schema variables
 By default, this package will run using your target database and the `amplitude` schema. If this is not where your Amplitude data is, add the following configuration to your root `dbt_project.yml` file:
@@ -67,8 +67,19 @@ vars:
     amplitude_database: your_database_name    
     amplitude_schema: your_schema_name
 ```
+## Step 4: Configure event date range
+Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
 
-## (Optional) Step 4: Additional configurations
+The default date range for the [stg_amplitude__event](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) model starts at '2020-01-01' and ends one month past the current day. Conversely, for the [date spine](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) model in this package the default date range starts at `2020-01-01` and ends one day after the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+```yml
+# dbt_project.yml
+...
+vars:
+    amplitude__date_range_start: '2022-01-01' # your start date here
+    amplitude__date_range_end: '2022-12-01' # your end date here
+```
+If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
+## (Optional) Step 5: Additional configurations
 <details><summary>Expand for configurations</summary>
 
 ### Change source table references
@@ -92,17 +103,6 @@ models:
     amplitude_source:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
-### Change event date range
-Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
-
-The default date range starts at '2020-01-01' and ends one day past the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
-```yml
-# dbt_project.yml
-...
-vars:
-    date_range_start: 'your_starting_date'
-    date_range_end: 'your_ending_date'
-```
 ### Pivot out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
 ```yml
@@ -117,7 +117,7 @@ vars:
 <br>
 
 
-## (Optional) Step 5: Leverage dbt metrics for further analysis
+## (Optional) Step 6: Leverage dbt metrics for further analysis
 <details><summary>Expand for configurations</summary>
 
 In addition to the existing final models, our Amplitude package defines common [metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including the following:
@@ -127,7 +127,7 @@ In addition to the existing final models, our Amplitude package defines common [
 - total_users
 - average_time_in_between_sessions
 
-You can find the supported dimensions and full definitions of these metrics [in the `ad_reporting_metrics.yml` file](https://github.com/fivetran/dbt_ad_reporting/blob/main/models/ad_reporting_metrics.yml).
+You can find the supported dimensions and full definitions of these metrics [in the `amplitude_metrics.yml` file](https://github.com/fivetran/amplitude/blob/main/models/amplitude_metrics.yml).
 
 To use dbt metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
 ```yml
@@ -156,7 +156,7 @@ from {{ metrics.calculate(
 <br>
 
 
-## (Optional) Step 6: Using this package with the dbt Product Analytics package
+## (Optional) Step 7: Using this package with the dbt Product Analytics package
 <details><summary>Expand for configurations</summary>
 
 The [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) package contains macros that allows for further exploration such as event flow, funnel, and retention analysis. To leverage this in conjunction with this package, add the following configuration to your project's `packages.yml` file:
@@ -188,7 +188,7 @@ Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analyt
 </details>
 <br>
 
-## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+## (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
 
@@ -203,7 +203,7 @@ This dbt package is dependent on the following dbt packages. Please be aware tha
 ```yml
 packages:
     - package: fivetran/amplitude_source
-      version: [">=0.2.0", "<0.3.0"]
+      version: [">=0.3.0", "<0.4.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
