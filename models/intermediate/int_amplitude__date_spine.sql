@@ -55,7 +55,7 @@ spine as (
 
     {% if is_incremental() %} 
         , max_date
-        where date_day >= max_date.max_event_day
+        where date_day > max_date.max_event_day
     
     {% endif %}
 ),
