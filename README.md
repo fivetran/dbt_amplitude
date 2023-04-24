@@ -52,8 +52,11 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.3.0", "<0.4.0"]
+    version: [">=0.3.0", "<0.4.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
+
+Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+
 ## Step 3: Define database and schema variables
 By default, this package will run using your target database and the `amplitude` schema. If this is not where your Amplitude data is, add the following configuration to your root `dbt_project.yml` file:
 
