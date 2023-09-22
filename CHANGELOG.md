@@ -1,12 +1,12 @@
 # dbt_amplitude v0.4.0
 
 ## Breaking Changes
-- This release removes the pre-defined dbt-metric configurations within the package. These metrics relied on an old version of dbt-metrics which has since been sunset.
+- This release removes the pre-defined dbt-metric configurations within the package. These metrics relied on an old version of dbt-metrics which has since been sunset. ([PR #15](https://github.com/fivetran/dbt_amplitude/pull/15))
     - If you found these metrics to be useful and would still like to leverage them within the package, we encourage you to open a PR on this repository to convert the pre-defined metrics so they may support the new dbt Labs Metric Flow configs and requirements. 
 
 ## Under the Hood:
-- Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job.
-- Updated the pull request [templates](/.github).
+- Incorporated the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job. ([PR #11](https://github.com/fivetran/dbt_amplitude/pull/11))
+- Updated the pull request [templates](/.github). ([PR #11](https://github.com/fivetran/dbt_amplitude/pull/11))
 
 # dbt_amplitude v0.3.0
 ## 🚨 Breaking Changes 🚨:
