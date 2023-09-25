@@ -52,7 +52,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.3.0", "<0.4.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.4.0", "<0.5.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -119,47 +119,7 @@ vars:
 </details>
 <br>
 
-
-## (Optional) Step 6: Leverage dbt metrics for further analysis
-<details><summary>Expand for configurations</summary>
-
-In addition to the existing final models, our Amplitude package defines common [metrics](https://docs.getdbt.com/docs/building-a-dbt-project/metrics) including the following:
-- total_events
-- average_session_length
-- total_sessions
-- total_users
-- average_time_in_between_sessions
-
-You can find the supported dimensions and full definitions of these metrics [in the `amplitude_metrics.yml` file](https://github.com/fivetran/amplitude/blob/main/models/amplitude_metrics.yml).
-
-To use dbt metrics, add the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) to your project's `packages.yml` file:
-```yml
-packages:
-  - package: dbt-labs/metrics
-    version: [">=0.3.0", "<0.4.0"]
-```
-
-> NOTE: The [metrics package](https://github.com/dbt-labs/dbt_metrics) has stricter dbt version requirements, so please check those requirements.
-
-To utilize Amplitude's pre-defined metrics in your code, refer to the [dbt metrics package](https://github.com/dbt-labs/dbt_metrics) usage instructions and the example below:
-```sql
-select * 
-from {{ metrics.calculate(
-        metric('total_events'),
-        grain='month',
-        dimensions=['region'],
-        secondary_calculations=[
-            metrics.period_over_period(comparison_strategy='ratio', interval=1, alias='ratio_last_mth'),
-            metrics.period_over_period(comparison_strategy='ratio', interval=12, alias='ratio_last_yr'),
-            metrics.period_to_date(aggregate='sum', period='year', alias='ytd')
-        ]
-) }}
-```
-</details>
-<br>
-
-
-## (Optional) Step 7: Using this package with the dbt Product Analytics package
+## (Optional) Step 6: Using this package with the dbt Product Analytics package
 <details><summary>Expand for configurations</summary>
 
 The [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) package contains macros that allows for further exploration such as event flow, funnel, and retention analysis. To leverage this in conjunction with this package, add the following configuration to your project's `packages.yml` file:
@@ -191,7 +151,7 @@ Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analyt
 </details>
 <br>
 
-## (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
+## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
 
