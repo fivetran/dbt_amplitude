@@ -16,17 +16,17 @@
 - Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation) and builds off the output of our [Amplitude source package](https://github.com/fivetran/dbt_amplitude_source).
 
 - Enables users to do the following:
-- Leverage event data that is enhanced with additional event type and pivoted custom property fields for later downstream use
-- View aggregated metrics for each unique session
-- View aggregated metrics for each unique user
-- View daily performance metrics for each event type
-- Use the enhanced event data to leverage dbt metrics to generate additional analytics
-- Incorporate the [dbt Product Analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, like for funnel and retention analysis
+  - Leverage event data that is enhanced with additional event type and pivoted custom property fields for later downstream use
+  - View aggregated metrics for each unique session
+  - View aggregated metrics for each unique user
+  - View daily performance metrics for each event type
+  - Use the enhanced event data to leverage dbt metrics to generate additional analytics
+  - Incorporate the [dbt Product Analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, like for funnel and retention analysis
 
 <!--section="amplitude_transformation_model"-->
 This package also generates a comprehensive data dictionary of your source and modeled Amplitude data through the [dbt docs site](https://fivetran.github.io/dbt_amplitude/). You can also refer to the table below for a detailed view of all models materialized within this package by default.
 
-|**model**|**description**
+|**Table**|**Description**
 -----|-----
 | [amplitude__event_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__event_enhanced)     | Each record represents event data, enhanced with event type data and unnested event, group, and user properties.
 | [amplitude__sessions](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__sessions)         | Each record represents a distinct session with aggregated metrics for that session.
