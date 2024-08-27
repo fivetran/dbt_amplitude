@@ -24,7 +24,7 @@
   - Incorporate the [dbt Product Analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, like for funnel and retention analysis
 
 <!--section="amplitude_transformation_model"-->
-This package also generates a comprehensive data dictionary of your source and modeled Amplitude data through the [dbt docs site](https://fivetran.github.io/dbt_amplitude/). You can also refer to the table below for a detailed view of all models materialized within this package by default.
+This package also generates a comprehensive data dictionary of your source and modeled Amplitude data through the [dbt docs site](https://fivetran.github.io/dbt_amplitude/). You can also refer to the table below for a detailed view of all tables materialized within this package by default.
 
 |**Table**|**Description**
 -----|-----
