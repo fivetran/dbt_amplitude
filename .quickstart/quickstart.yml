@@ -8,3 +8,10 @@ destination_configurations:
     dispatch:
       - macro_namespace: dbt_utils
         search_order: [ 'spark_utils', 'dbt_utils' ]
+
+public_models: [
+  "amplitude__user_enhanced",
+  "amplitude__event_enhanced",
+  "amplitude__daily_performance",
+  "amplitude__sessions"
+]
