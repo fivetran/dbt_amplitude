@@ -2,34 +2,20 @@
     config(
         materialized='incremental',
         unique_key='unique_session_id',
-        partition_by={"field": "session_started_at_day", "data_type": "timestamp"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
-        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
+        partition_by={"field": "session_started_at_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
+        cluster_by='session_started_at_day',
+        incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         file_format = 'delta'
         )
 }}
 
-with 
-
-{% if is_incremental() %}
-    
-max_date as (
-
-    select max(session_started_at) as max_session_started_at
-    from {{ this }} 
-
-),
-
-{% endif %}
-    
-event_data_raw as (
+with event_data_raw as (
 
     select events.*
     from {{ var('event') }} as events
 
     {% if is_incremental() %}
-        , max_date
-        where event_time >= max_date.max_session_started_at
-
+    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(session_started_at_day)', datepart='day', interval=var('lookback_window', 3)) }}
     {% endif %}
 ),
 
@@ -72,8 +58,8 @@ session_ranking as (
         session_started_at,
         session_ended_at,
         session_length_in_minutes,
-        {{ dbt.date_trunc('day', 'session_started_at') }} as session_started_at_day,
-        {{ dbt.date_trunc('day', 'session_ended_at') }} as session_ended_at_day,
+        cast({{ dbt.date_trunc('day', 'session_started_at') }} as date) as session_started_at_day,
+        cast({{ dbt.date_trunc('day', 'session_ended_at') }} as date) as session_ended_at_day,
         case 
             when user_id is not null then row_number() over (partition by user_id order by session_started_at) 
             else null

@@ -3,7 +3,8 @@
         materialized='incremental',
         unique_key='daily_unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
+        cluster_by='event_day',
+        incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         file_format = 'delta' 
     )
 }}
@@ -12,18 +13,11 @@ with event_enhanced as (
 
     select * 
     from {{ ref('amplitude__event_enhanced') }}
+
+    {% if is_incremental() %}
+    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
+    {% endif %}
 ),
-
-{% if is_incremental() %}
-    
-max_date as (
-
-    select max(event_day) as max_event_day
-    from {{ this }} 
-
-),
-
-{% endif %}
 
 date_spine as (
     
@@ -31,9 +25,7 @@ date_spine as (
     from {{ ref('int_amplitude__date_spine') }} as spine
 
     {% if is_incremental() %}
-        , max_date
-        where event_day >= max_date.max_event_day
-
+    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
     {% endif %}
 ), 
 
@@ -78,12 +70,6 @@ final as (
         coalesce(number_new_users,0) as number_new_users,
         {{ dbt_utils.generate_surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
     from spine_joined
-
-    {% if is_incremental() %}
-    -- only return the most recent day of data
-    where event_day >= coalesce( (select max(event_day)  from {{ this }} ), '2020-01-01')
-
-    {% endif %}
 )
 
 select *
