@@ -1,12 +1,7 @@
+-- depends_on: {{ ref('amplitude__event_enhanced') }}
 {{ config(materialized='ephemeral') }}
 
-with event_data as (
-
-    select * 
-    from {{ ref('amplitude__event_enhanced') }}
-),
-
-spine as (
+with spine as (
     {% if execute and flags.WHICH in ('run', 'build') %}
     {%- set first_date_query %}
         select 
@@ -31,7 +26,7 @@ spine as (
     {%- set last_date = dbt_utils.get_single_value(last_date_query) %}
 
     select
-        spine.date_day
+        cast(spine.date_day as date) as date_day
     from (
         {{ dbt_utils.date_spine(
             datepart = "day", 
@@ -40,17 +35,7 @@ spine as (
             )
         }} 
     ) as spine
-),
-
-date_spine as (
-
-    select
-        distinct event_data.event_type,
-        cast(spine.date_day as date) as event_day
-    from spine 
-    join event_data
-        on spine.date_day >= event_data.event_day -- each event_type will have a record for every day since their first day
 )
 
 select * 
-from date_spine
+from spine

@@ -20,13 +20,13 @@ with event_enhanced as (
 ),
 
 date_spine as (
-    
-    select spine.*
-    from {{ ref('int_amplitude__date_spine') }} as spine
 
-    {% if is_incremental() %}
-    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
-    {% endif %}
+    select
+        distinct event_enhanced.event_type,
+        spine.date_day as event_day
+    from {{ ref('int_amplitude__date_spine') }} as spine
+    join event_enhanced -- join will effectively limit the date_spine during incremental run
+        on spine.date_day >= event_enhanced.event_day -- each event_type will have a record for every day since their first day
 ), 
 
 agg_event_data as (

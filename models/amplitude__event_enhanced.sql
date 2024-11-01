@@ -46,6 +46,10 @@ session_data as (
 
     select *
     from {{ ref('amplitude__sessions') }}
+
+    {% if is_incremental() %}
+    where unique_session_id in (select unique_session_id from event_data)
+    {% endif %}
 ),
 
 event_enhanced as (
