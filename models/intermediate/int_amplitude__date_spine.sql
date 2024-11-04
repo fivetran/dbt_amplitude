@@ -3,7 +3,7 @@
 with spine as (
 {% set end_date_query %}
     -- select one day past current day
-    select cast({{ dbt.dateadd("day", 1, dbt.current_timestamp()) }} as date) as max_date
+    select cast({{ dbt.dateadd("day", 1, dbt.current_timestamp()) }} as date)
 {% endset %}
 
 {%- set end_date_adjust = dbt_utils.get_single_value(end_date_query) %}
