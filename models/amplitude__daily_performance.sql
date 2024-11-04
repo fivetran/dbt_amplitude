@@ -25,7 +25,7 @@ date_spine as (
         distinct event_enhanced.event_type,
         spine.date_day as event_day
     from {{ ref('int_amplitude__date_spine') }} as spine
-    join event_enhanced -- join will effectively limit the date_spine during incremental run
+    join event_enhanced -- this join limits the incremental run
         on spine.date_day >= event_enhanced.event_day -- each event_type will have a record for every day since their first day
 ), 
 
@@ -44,32 +44,19 @@ agg_event_data as (
     group by 1,2
 ),
 
-spine_joined as (
-
+final as (
     select
         date_spine.event_day,
         date_spine.event_type,
-        agg_event_data.number_events,
-        agg_event_data.number_sessions,
-        agg_event_data.number_users,
-        agg_event_data.number_new_users
+        coalesce(agg_event_data.number_events, 0) as number_events,
+        coalesce(agg_event_data.number_sessions, 0) as number_sessions,
+        coalesce(agg_event_data.number_users, 0) as number_users,
+        coalesce(agg_event_data.number_new_users, 0) as number_new_users,
+        {{ dbt_utils.generate_surrogate_key(['date_spine.event_day', 'date_spine.event_type']) }} as daily_unique_key
     from date_spine
     left join agg_event_data
         on date_spine.event_day = agg_event_data.event_day
         and date_spine.event_type = agg_event_data.event_type
-),
-
-final as (
-
-    select
-        event_day,
-        event_type,
-        coalesce(number_events,0) as number_events,
-        coalesce(number_sessions,0) as number_sessions,
-        coalesce(number_users,0) as number_users,
-        coalesce(number_new_users,0) as number_new_users,
-        {{ dbt_utils.generate_surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
-    from spine_joined
 )
 
 select *

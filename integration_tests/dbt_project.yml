@@ -9,6 +9,9 @@ dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
 
+models:
+  +schema: "amplitude_{{ var('directed_schema','dev') }}"
+
 vars:
   amplitude_source:
     amplitude_event_identifier: "amplitude_event_data"

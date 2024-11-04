@@ -1,3 +1,12 @@
+# dbt_amplitude v0.5.0
+[PR #19](https://github.com/fivetran/dbt_amplitude/pull/19) includes the following updates:
+
+## Breaking Changes
+- Incremental rework
+
+## Under the Hood:
+- Updated seed data to work with current logic.
+
 # dbt_amplitude v0.4.0
 
 ## Breaking Changes
