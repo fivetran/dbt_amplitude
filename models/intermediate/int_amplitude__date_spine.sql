@@ -1,12 +1,12 @@
 {{ config(materialized='ephemeral') }}
 
 with spine as (
-    {%- set last_date_query %}
+    {%- set end_date_query %}
         select 
             cast({{ dbt.dateadd("day", 1, dbt.current_timestamp()) }} as date) as max_date
     {% endset -%}
 
-    {%- set last_date = dbt_utils.get_single_value(last_date_query) %}
+    {%- set last_date = dbt_utils.get_single_value(end_date_query) %}
 
     select
         cast(spine.date_day as date) as date_day
