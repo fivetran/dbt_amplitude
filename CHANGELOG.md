@@ -2,10 +2,15 @@
 [PR #19](https://github.com/fivetran/dbt_amplitude/pull/19) includes the following updates:
 
 ## Breaking Changes
-- Incremental rework
+- Update `unique_key` from `amplitude__event_enhanced` to be generated from 'unique_event_id' and 'unique_event_type_id'.  
+    - Previously this was generated from 'unique_event_id' and 'event_day' and caused duplicates for some users.
+- Updated incremental models to use a lookback window. 
+- Updated `int_amplitude__date_spine` to be ephemeral to reduce number of tables necessary and complexity of chaining incremental models. 
+- Updated the incremental strategy to use `insert_overwrite` for Bigquery and Databricks, and use `delete+insert` for Snowflake, Redshift, and Postgres.
+  - This was done so Bigquery and Databricks could take advantage of the compute savings of `insert_overwrite`. 
 
 ## Under the Hood:
-- Updated seed data to work with current logic.
+- Updated seed data event_time fields so it doesn't automatically get filtered out during the test run.
 
 # dbt_amplitude v0.4.0
 
