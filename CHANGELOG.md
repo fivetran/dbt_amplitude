@@ -15,6 +15,9 @@ Users should perform a `--full-refresh` when upgrading to ensure all changes are
 - Added a default 3-day lookback period for incremental models to handle late-arriving records. Customize the lookback duration by setting the `lookback_window` variable in `dbt_project.yml`. For more information, refer to the [Lookback Window section of the README](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#lookback-window).
 - Added the `amplitude_lookback` macro to simplify lookback calculations across models.
 
+## Documentation updates
+- Updated outdated or missing field definitions in dbt documentation.
+
 ## Under the hood
 - Adjusted the `event_time` field in the `event_data` seed file to ensure records are not automatically excluded during test runs.
 - Added consistency tests for end models.
