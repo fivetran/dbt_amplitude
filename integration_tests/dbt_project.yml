@@ -10,7 +10,8 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
-  +schema: "amplitude_{{ var('directed_schema','dev') }}"
+  +schema: "{{ 'amplitude_sqlw' if target.name == 'databricks-sql' else 'amplitude' }}"
+  # +schema: "amplitude_{{ var('directed_schema','dev') }}"
 
 vars:
   amplitude_source:

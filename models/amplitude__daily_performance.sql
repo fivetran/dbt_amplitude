@@ -1,6 +1,6 @@
 {{
     config(
-        materialized='incremental',
+        materialized='incremental' if is_incremental_compatible(target) else 'table',
         unique_key='daily_unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
         cluster_by='event_day',

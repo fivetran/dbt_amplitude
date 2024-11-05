@@ -8,7 +8,8 @@ Users should perform a `--full-refresh` when upgrading to ensure all changes are
     - The unique key was previously generated from `unique_event_id` and `event_day`, which caused duplicate keys for some users and prevented incremental runs.
 - Made the `int_amplitude__date_spine` materialization ephemeral to reduce the number of tables and simplify incremental model dependencies.
 - Updated incremental loading strategies:
-  - **BigQuery** and **Databricks**: `insert_overwrite` for compute efficiency
+  - BigQuery and Databricks All-Purpose Clusters: `insert_overwrite` for compute efficiency
+    - For Databricks SQL Warehouses, incremental materialization will not be used due to the incompatibility of the `insert_overwrite` strategy.
   - **Snowflake**, **Redshift**, and **Postgres**: `delete+insert`
 
 ## Features
@@ -21,6 +22,8 @@ Users should perform a `--full-refresh` when upgrading to ensure all changes are
 ## Under the hood
 - Adjusted the `event_time` field in the `event_data` seed file to ensure records are not automatically excluded during test runs.
 - Added consistency tests for end models.
+- Added a new macro `is_incremental_compatible()` to identify if the Databricks SQL Warehouse runtime is being used. This macro returns `false` if the runtime is SQL Warehouse, and `true` for any other Databricks runtime or supported destination.
+- Added testing for Databricks SQL Warehouses.
 
 # dbt_amplitude v0.4.0
 
