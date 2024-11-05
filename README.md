@@ -55,7 +55,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.4.0", "<0.5.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.5.0", "<0.6.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -86,7 +86,18 @@ vars:
 ```
 If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
 ### (Optional) Step 5: Additional configurations
-<details><summary>Expand for configurations</summary>
+<details open><summary>Expand/collapse configurations</summary>
+
+### Lookback Window
+Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 3 days from new records to ensure late arrivals are captured and avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. 
+
+To change the default lookback window, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  amplitude:
+    lookback_window: number_of_days # default is 3
+```
 
 #### Change source table references
 If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:

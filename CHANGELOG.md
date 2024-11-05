@@ -2,15 +2,22 @@
 [PR #19](https://github.com/fivetran/dbt_amplitude/pull/19) includes the following updates:
 
 ## Breaking Changes
-- Update `unique_key` from `amplitude__event_enhanced` to be generated from 'unique_event_id' and 'unique_event_type_id'.  
-    - Previously this was generated from 'unique_event_id' and 'event_day' and caused duplicates for some users.
-- Updated incremental models to use a lookback window. 
-- Updated `int_amplitude__date_spine` to be ephemeral to reduce number of tables necessary and complexity of chaining incremental models. 
-- Updated the incremental strategy to use `insert_overwrite` for Bigquery and Databricks, and use `delete+insert` for Snowflake, Redshift, and Postgres.
-  - This was done so Bigquery and Databricks could take advantage of the compute savings of `insert_overwrite`. 
+Users should perform a `--full-refresh` when upgrading to ensure all changes are applied correctly. This includes updates to unique key generation, materialization, and incremental strategies, which may affect existing records.
 
-## Under the Hood:
-- Updated seed data event_time fields so it doesn't automatically get filtered out during the test run.
+- Revised `unique_key` generation for `amplitude__event_enhanced` using `unique_event_id` and `unique_event_type_id` to prevent duplicate records.
+    - The unique key was previously generated from `unique_event_id` and `event_day`, which caused duplicate keys for some users and prevented incremental runs.
+- Made the `int_amplitude__date_spine` materialization ephemeral to reduce the number of tables and simplify incremental model dependencies.
+- Updated incremental loading strategies:
+  - **BigQuery** and **Databricks**: `insert_overwrite` for compute efficiency
+  - **Snowflake**, **Redshift**, and **Postgres**: `delete+insert`
+
+## Features
+- Added a default 3-day lookback period for incremental models to handle late-arriving records. Customize the lookback duration by setting the `lookback_window` variable in `dbt_project.yml`. For more information, refer to the [Lookback Window section of the README](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#lookback-window).
+- Added the `amplitude_lookback` macro to simplify lookback calculations across models.
+
+## Under the hood
+- Adjusted the `event_time` field in the `event_data` seed file to ensure records are not automatically excluded during test runs.
+- Added consistency tests for end models.
 
 # dbt_amplitude v0.4.0
 
