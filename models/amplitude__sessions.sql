@@ -1,6 +1,6 @@
 {{
     config(
-        materialized='incremental' if is_incremental_compatible(target) else 'table',
+        materialized='incremental' if is_incremental_compatible() else 'table',
         unique_key='unique_session_id',
         partition_by={"field": "session_started_at_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
         cluster_by='session_started_at_day',
