@@ -53,7 +53,7 @@ dispatch:
 This package's incremental models are configured to leverage the different incremental strategies for each supported warehouse.
 
 For **BigQuery** and **Databricks All Purpose Cluster runtime** destinations, we have chosen insert_overwrite as the default strategy, which benefits from the partitioning capability. 
-> For Databricks SQL Warehouse destinations, models are materialized as tables without support for incremental runs.
+> For **Databricks SQL Warehouse** destinations, models are materialized as tables without support for incremental runs.
 
 For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen delete+insert as the default strategy.  
 
@@ -98,7 +98,7 @@ If you adjust the date range variables, we recommend running `dbt run --full-ref
 ### (Optional) Step 5: Additional configurations
 <details open><summary>Expand/collapse configurations</summary>
 
-### Lookback Window
+#### Lookback Window
 Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 3 days from new records to ensure late arrivals are captured and avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. 
 
 To change the default lookback window, add the following variable to your `dbt_project.yml` file:

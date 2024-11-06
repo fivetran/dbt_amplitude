@@ -8,8 +8,8 @@ Users should perform a `--full-refresh` when upgrading to ensure all changes are
     - The unique key was previously generated from `unique_event_id` and `event_day`, which caused duplicate keys for some users and prevented incremental runs.
 - Made the `int_amplitude__date_spine` materialization ephemeral to reduce the number of tables and simplify incremental model dependencies.
 - Updated incremental loading strategies:
-  - BigQuery and Databricks All-Purpose Clusters: `insert_overwrite` for compute efficiency
-    - For Databricks SQL Warehouses, incremental materialization will not be used due to the incompatibility of the `insert_overwrite` strategy.
+  - **BigQuery** and **Databricks All-Purpose Clusters**: `insert_overwrite` for compute efficiency
+    - For **Databricks SQL Warehouses**, incremental materialization will not be used due to the incompatibility of the `insert_overwrite` strategy.
   - **Snowflake**, **Redshift**, and **Postgres**: `delete+insert`
 
 ## Features
