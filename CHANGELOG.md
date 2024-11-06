@@ -15,6 +15,7 @@ Users should perform a `--full-refresh` when upgrading to ensure all changes are
 ## Features
 - Added a default 3-day lookback period for incremental models to handle late-arriving records. Customize the lookback duration by setting the `lookback_window` variable in `dbt_project.yml`. For more information, refer to the [Lookback Window section of the README](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#lookback-window).
 - Added the `amplitude_lookback` macro to simplify lookback calculations across models.
+- Changed the data type of `session_started_at` and `session_ended_at` in the `amplitude__sessions` model from `timestamp` to `date` to support incremental calculations.
 
 ## Documentation updates
 - Updated outdated or missing field definitions in dbt documentation.
