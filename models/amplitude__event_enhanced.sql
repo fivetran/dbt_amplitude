@@ -1,35 +1,21 @@
 {{
     config(
-        materialized='incremental',
+        materialized='incremental' if is_incremental_compatible() else 'table',
         unique_key='unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
+        cluster_by='event_day',
+        incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         file_format = 'delta' 
-        )
+    )
 }}
 
-with 
-
-{% if is_incremental() %}
-    
-max_date as (
-
-    select max(event_day) as max_event_day
-    from {{ this }} 
-
-),
-
-{% endif %}
-
-event_data_raw as (
+with event_data_raw as (
 
     select events.*
     from {{ var('event') }} as events
 
     {% if is_incremental() %}
-        , max_date
-        where event_day >= max_date.max_event_day
-
+    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
     {% endif %}
 ),
 
@@ -72,6 +58,7 @@ event_enhanced as (
         , event_data.event_type
         , event_data.event_time
         , event_data.event_day
+        , event_type.unique_event_type_id
 
         {% if var('event_properties_to_pivot') %},
         {{ fivetran_utils.pivot_json_extract(string = 'event_properties', list_of_properties = var('event_properties_to_pivot')) }}
@@ -147,7 +134,7 @@ final as (
 
     select 
         *,
-        {{ dbt_utils.generate_surrogate_key(['unique_event_id','event_day']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['unique_event_id','unique_event_type_id']) }} as unique_key
     from event_enhanced
 )
 

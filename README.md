@@ -49,13 +49,23 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 ```
 
+### Database Incremental Strategies
+This package's incremental models are configured to leverage the different incremental strategies for each supported warehouse.
+
+For **BigQuery** and **Databricks All Purpose Cluster runtime** destinations, we have chosen insert_overwrite as the default strategy, which benefits from the partitioning capability. 
+> For **Databricks SQL Warehouse** destinations, models are materialized as tables without support for incremental runs.
+
+For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen delete+insert as the default strategy.  
+
+> Regardless of strategy, we recommend that users periodically run a --full-refresh to ensure a high level of data quality.
+
 ### Step 2: Install the package
 Include the following Amplitude package version in your `packages.yml` file:
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.4.0", "<0.5.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.5.0", "<0.6.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -86,7 +96,18 @@ vars:
 ```
 If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
 ### (Optional) Step 5: Additional configurations
-<details><summary>Expand for configurations</summary>
+<details open><summary>Expand/collapse configurations</summary>
+
+#### Lookback Window
+Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 3 days from new records to ensure late arrivals are captured and avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. 
+
+To change the default lookback window, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  amplitude:
+    lookback_window: number_of_days # default is 3
+```
 
 #### Change source table references
 If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:

@@ -5,11 +5,13 @@ models:
   - name: amplitude__event_enhanced
     description: Each record represents event data, enhanced with event type data and unnested event, group, and user properties. 
     columns:
-      - name: unique_event_id
-        description: A unique key for each event, concatenating event_id, device_id, and client_event_time
+      - name: unique_key
+        description: Surrogate key generated from the `unique_event_id` and `unique_event_type_id`.
         tests:
           - unique
           - not_null
+      - name: unique_event_id
+        description: A unique key for each event, concatenating event_id, device_id, and client_event_time
       - name: unique_session_id
         description: Unique key of each session, concatenating user_id and session_id
       - name: amplitude_user_id
@@ -121,10 +123,22 @@ models:
         description: The time of the first event in a session
       - name: session_ended_at
         description: The time of the last event in a session
-      - name: session_length
-        description: The length of the session, in seconds
+      - name: session_length_in_minutes
+        description: The length of the session, in minutes
       - name: is_first_user_session
         description: Boolean of whether or not a session is the user's first session
+      - name: unique_event_type_id
+        description: A unique identifier for each event type.
+      - name: user_event_number
+        description: A sequential count of events triggered by a user, indicating the order of events within a user’s activity.
+      - name: user_session_number
+        description: A sequential identifier for each session initiated by a user, helping to track users across sessions.
+      - name: session_started_at_day
+        description: The date on which a session started.
+      - name: session_ended_at_day
+        description: The date on which a session ended.
+      - name: minutes_in_between_sessions
+        description: The minutes in between sessions of a user.
 
   - name: amplitude__sessions
     description: Each record represents a distinct session with aggregated metrics for that session.
@@ -147,8 +161,8 @@ models:
         description: The time of the first event in a session
       - name: session_ended_at
         description: The time of the last event in a session
-      - name: session_length
-        description: The length of the session, in seconds
+      - name: session_length_in_minutes
+        description: The length of the session, in minutes
       - name: session_started_at_day
         description: The day the session started
       - name: session_ended_at_day
@@ -161,12 +175,8 @@ models:
         description: The day the prior session ended
       - name: is_first_user_session
         description: Boolean of whether or not a session is the user's first session
-      - name: seconds_in_between_sessions
-        description: The seconds in between sessions of a user
       - name: minutes_in_between_sessions
         description: The minutes in between sessions of a user
-      - name: days_in_between_sessions
-        description: The days in between sessions of a user
 
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
@@ -186,23 +196,19 @@ models:
         description: The total number of events for a certain user
       - name: total_sessions_per_user
         description: The total number of sessions for a certain user
-      - name: average_session_length
-        description: Average length of sessions, in seconds
-      - name: average_seconds_in_between_sessions
-        description: Average time in between sessions for a user, in seconds
+      - name: average_session_length_in_minutes
+        description: Average length of sessions, in minutes
       - name: average_minutes_in_between_sessions
         description: Average time in between sessions for a user, in minutes
-      - name: average_days_in_between_sessions
-        description: Average time in between sessions for a user, in days
 
   - name: amplitude__daily_performance
     description: Each record represents performance metrics for each distinct day and event type.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - event_day
-            - event_type
     columns:
+      - name: daily_unique_key
+        description: Surrogate key generated from the `event_day` and `event_type`.
+        tests:
+          - unique
+          - not_null
       - name: event_day
         description: Day of event time
       - name: event_type

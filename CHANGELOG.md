@@ -1,3 +1,31 @@
+# dbt_amplitude v0.5.0
+[PR #19](https://github.com/fivetran/dbt_amplitude/pull/19) includes the following updates:
+
+## Breaking Changes
+Users should perform a `--full-refresh` when upgrading to ensure all changes are applied correctly. This includes updates to unique key generation, materialization, and incremental strategies, which may affect existing records.
+
+- Revised `unique_key` generation for `amplitude__event_enhanced` using `unique_event_id` and `unique_event_type_id` to prevent duplicate records.
+    - The unique key was previously generated from `unique_event_id` and `event_day`, which caused duplicate keys for some users and prevented incremental runs.
+- Made the `int_amplitude__date_spine` materialization ephemeral to reduce the number of tables and simplify incremental model dependencies.
+- Updated incremental loading strategies:
+  - **BigQuery** and **Databricks All-Purpose Clusters**: `insert_overwrite` for compute efficiency
+    - For **Databricks SQL Warehouses**, incremental materialization will not be used due to the incompatibility of the `insert_overwrite` strategy.
+  - **Snowflake**, **Redshift**, and **Postgres**: `delete+insert`
+
+## Features
+- Added a default 3-day lookback period for incremental models to handle late-arriving records. Customize the lookback duration by setting the `lookback_window` variable in `dbt_project.yml`. For more information, refer to the [Lookback Window section of the README](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#lookback-window).
+- Added the `amplitude_lookback` macro to simplify lookback calculations across models.
+- Changed the data type of `session_started_at` and `session_ended_at` in the `amplitude__sessions` model from `timestamp` to `date` to support incremental calculations.
+
+## Documentation updates
+- Updated outdated or missing field definitions in dbt documentation.
+
+## Under the hood
+- Adjusted the `event_time` field in the `event_data` seed file to ensure records are not automatically excluded during test runs.
+- Added consistency tests for end models.
+- Added a new macro `is_incremental_compatible()` to identify if the Databricks SQL Warehouse runtime is being used. This macro returns `false` if the runtime is SQL Warehouse, and `true` for any other Databricks runtime or supported destination.
+- Added testing for Databricks SQL Warehouses.
+
 # dbt_amplitude v0.4.0
 
 ## Breaking Changes

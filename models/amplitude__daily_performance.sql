@@ -1,9 +1,10 @@
 {{
     config(
-        materialized='incremental',
+        materialized='incremental' if is_incremental_compatible() else 'table',
         unique_key='daily_unique_key',
         partition_by={"field": "event_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['event_day'],
-        incremental_strategy = 'merge' if target.type not in ('postgres', 'redshift') else 'delete+insert',
+        cluster_by='event_day',
+        incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         file_format = 'delta' 
     )
 }}
@@ -14,26 +15,17 @@ with event_enhanced as (
     from {{ ref('amplitude__event_enhanced') }}
 ),
 
-{% if is_incremental() %}
-    
-max_date as (
-
-    select max(event_day) as max_event_day
-    from {{ this }} 
-
-),
-
-{% endif %}
-
 date_spine as (
-    
-    select spine.*
+
+    select
+        distinct event_enhanced.event_type,
+        spine.date_day as event_day
     from {{ ref('int_amplitude__date_spine') }} as spine
+    join event_enhanced -- this join limits the incremental run
+        on spine.date_day >= event_enhanced.event_day -- each event_type will have a record for every day since their first day
 
     {% if is_incremental() %}
-        , max_date
-        where event_day >= max_date.max_event_day
-
+    where spine.date_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
     {% endif %}
 ), 
 
@@ -52,38 +44,19 @@ agg_event_data as (
     group by 1,2
 ),
 
-spine_joined as (
-
+final as (
     select
         date_spine.event_day,
         date_spine.event_type,
-        agg_event_data.number_events,
-        agg_event_data.number_sessions,
-        agg_event_data.number_users,
-        agg_event_data.number_new_users
+        coalesce(agg_event_data.number_events, 0) as number_events,
+        coalesce(agg_event_data.number_sessions, 0) as number_sessions,
+        coalesce(agg_event_data.number_users, 0) as number_users,
+        coalesce(agg_event_data.number_new_users, 0) as number_new_users,
+        {{ dbt_utils.generate_surrogate_key(['date_spine.event_day', 'date_spine.event_type']) }} as daily_unique_key
     from date_spine
     left join agg_event_data
         on date_spine.event_day = agg_event_data.event_day
         and date_spine.event_type = agg_event_data.event_type
-),
-
-final as (
-
-    select
-        event_day,
-        event_type,
-        coalesce(number_events,0) as number_events,
-        coalesce(number_sessions,0) as number_sessions,
-        coalesce(number_users,0) as number_users,
-        coalesce(number_new_users,0) as number_new_users,
-        {{ dbt_utils.generate_surrogate_key(['event_day', 'event_type']) }} as daily_unique_key
-    from spine_joined
-
-    {% if is_incremental() %}
-    -- only return the most recent day of data
-    where event_day >= coalesce( (select max(event_day)  from {{ this }} ), '2020-01-01')
-
-    {% endif %}
 )
 
 select *
