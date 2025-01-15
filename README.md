@@ -33,12 +33,14 @@ This package also generates a comprehensive data dictionary of your source and m
 | [amplitude__user_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__user_enhanced)               | Each record represents a distinct user with aggregated metrics for that user.
 | [amplitude__daily_performance](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__daily_performance)               | Each record represents performance metrics for each distinct day and event type.
 
+### Materialized Models
+Each Quickstart transformation job run materializes 8 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
 ### Step 1: Prerequisites
 To use this dbt package, you must have the following:
-- At least one Fivetran Amplitude connector syncing data into your destination.
+- At least one Fivetran Amplitude connection syncing data into your destination.
 - A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
 #### Databricks dispatch configuration

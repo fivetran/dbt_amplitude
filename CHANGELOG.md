@@ -1,3 +1,9 @@
+# dbt_amplitude version.version
+
+## Documentation
+- Added Quickstart model counts to README. ([#22](https://github.com/fivetran/dbt_amplitude/pull/22))
+- Corrected references to connectors and connections in the README. ([#22](https://github.com/fivetran/dbt_amplitude/pull/22))
+
 # dbt_amplitude v0.5.0
 [PR #19](https://github.com/fivetran/dbt_amplitude/pull/19) includes the following updates:
 
