@@ -1,4 +1,8 @@
-# dbt_amplitude version.version
+# dbt_amplitude v0.6.0-a1
+This pre-release includes the following updates:
+
+## Bug fixes
+- ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
 
 ## Documentation
 - Added Quickstart model counts to README. ([#22](https://github.com/fivetran/dbt_amplitude/pull/22))

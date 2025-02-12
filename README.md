@@ -67,7 +67,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.5.0", "<0.6.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: "0.6.0-a1"
 ```
 
 Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -192,7 +192,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/amplitude_source
-      version: [">=0.3.0", "<0.4.0"]
+      version: "0.4.0-a1"
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]

@@ -25,7 +25,7 @@ date_spine as (
         on spine.date_day >= event_enhanced.event_day -- each event_type will have a record for every day since their first day
 
     {% if is_incremental() %}
-    where spine.date_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
+    where spine.date_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 7)) }}
     {% endif %}
 ), 
 
