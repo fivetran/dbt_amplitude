@@ -1,3 +1,21 @@
+# dbt_amplitude v0.6.0
+This release includes the following updates:
+
+## Breaking Change
+- Updated `stg_amplitude__event` in the source package to filter events with `event_time` up to and including the current date, preventing data quality issues in this package's incremental models. Future events are treated as erroneous. ([#14](https://github.com/fivetran/dbt_amplitude_source/pull/14))
+- As a result, the following models will no longer include events past the current date: ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
+  - `amplitude__daily_performance`
+  - `amplitude__event_enhanced`
+  - `amplitude__sessions`
+
+## Features  
+- Extended the lookback window in incremental models from 3 to 7 days to better capture late-arriving event records. ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
+
+## Documentation
+- Added a [DECISIONLOG](https://github.com/fivetran/dbt_amplitude/blob/main/DECISIONLOG.md#filtering-out-future-events) entry regarding the new date filter. ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
+- Added Quickstart model counts to README. ([#22](https://github.com/fivetran/dbt_amplitude/pull/22))
+- Corrected references to connectors and connections in the README. ([#22](https://github.com/fivetran/dbt_amplitude/pull/22))
+
 # dbt_amplitude v0.6.0-a1
 This pre-release includes the following updates:
 
