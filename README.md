@@ -130,7 +130,7 @@ models:
       +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 #### Pivot out nested fields containing custom properties
-The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:\
+The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
 
 ```yml
 vars:
