@@ -18,4 +18,4 @@ We then order the respective records with same aforementioned fields by `client_
 ## Filtering Out Future Events 
 We decided to filter out future events (`event_time` beyond the current date) in `stg_amplitude__event` to prevent issues with incremental models relying on the maximum `event_time` value. Previously, future-dated events caused these models to exclude expected new data, leading to gaps in reporting.  
  
-As a result, models `stg_amplitude__event`, `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` will no longer include future events.
+As a result, models `stg_amplitude__event`, `amplitude__daily_performance`, `amplitude__event_enhanced`, `amplitude__sessions`, and `amplitude__user_enhanced` will no longer reference future events.

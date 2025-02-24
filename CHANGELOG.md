@@ -4,10 +4,11 @@ This release includes the following updates:
 ## Breaking Change
 > A `--full-refresh` is required when upgrading to ensure all changes are properly applied.
 - Updated `stg_amplitude__event` in the source package to filter events with `event_time` up to and including the current date, preventing data quality issues in this package's incremental models. Future events are treated as erroneous. ([#14](https://github.com/fivetran/dbt_amplitude_source/pull/14))
-- As a result, the following models will no longer include events past the current date: ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
+- As a result, the following models will no longer reference events past the current date: ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
   - `amplitude__daily_performance`
   - `amplitude__event_enhanced`
   - `amplitude__sessions`
+  - `amplitude__user_enhanced`
 
 ## Features  
 - Extended the lookback window in incremental models from 3 to 7 days to better capture late-arriving event records. ([#23](https://github.com/fivetran/dbt_amplitude/pull/23))
