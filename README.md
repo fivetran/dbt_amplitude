@@ -1,4 +1,6 @@
-<p align="center">
+# Amplitude Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
+
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_amplitude/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
@@ -9,8 +11,6 @@
     <a alt="PRs">
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
 </p>
-
-# Amplitude Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
 
 ## What does this dbt package do?
 - Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation) and builds off the output of our [Amplitude source package](https://github.com/fivetran/dbt_amplitude_source).
@@ -67,7 +67,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.5.0", "<0.6.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.6.0", "<0.7.0"]
 ```
 
 Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -86,17 +86,17 @@ vars:
     amplitude_schema: your_schema_name
 ```
 ### Step 4: Configure event date range
-Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. However, note that the `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` final models are materialized as incremental tables.
+Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. 
 
-The default date range for the [stg_amplitude__event](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) model starts at '2020-01-01' and ends one month past the current day. Conversely, for the [date spine](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) model in this package the default date range starts at `2020-01-01` and ends one day after the current day. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+
 ```yml
-# dbt_project.yml
-...
 vars:
     amplitude__date_range_start: '2022-01-01' # your start date here
     amplitude__date_range_end: '2022-12-01' # your end date here
 ```
-If you adjust the date range variables, we recommend running `dbt run --full-refresh` to ensure no data quality issues within the adjusted date range.
+NOTE: The `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` models are materialized as incremental. Updating the date range in `dbt_project.yml` will only apply to newly ingested data. If you modify the date range variables, we recommend running `dbt run --full-refresh` to ensure consistency across the adjusted date range.
+
 ### (Optional) Step 5: Additional configurations
 <details open><summary>Expand/collapse configurations</summary>
 
@@ -116,9 +116,6 @@ If an individual source table has a different name than the package expects, add
 > IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
-# dbt_project.yml
-...
-config-version: 2
 vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
@@ -134,9 +131,8 @@ models:
 ```
 #### Pivot out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
+
 ```yml
-# dbt_project.yml
-...
 vars:
     event_properties_to_pivot: ['event_property_1','event_property_2']
     group_properties_to_pivot: ['group_property_1','group_property_2']
@@ -192,7 +188,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/amplitude_source
-      version: [">=0.3.0", "<0.4.0"]
+      version: [">=0.4.0", "<0.5.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]

@@ -15,7 +15,7 @@ with event_data_raw as (
     from {{ var('event') }} as events
 
     {% if is_incremental() %}
-    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 3)) }}
+    where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 7)) }}
     {% endif %}
 ),
 
