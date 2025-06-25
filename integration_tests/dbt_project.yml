@@ -1,5 +1,3 @@
-config-version: 2
-
 name: 'amplitude_integration_tests'
 version: '0.7.0'
 config-version: 2
