@@ -1,6 +1,6 @@
 # dbt_amplitude v0.7.0
 
-[PR #24](https://github.com/fivetran/dbt_amplitude/pull/24) includes the following updates:
+[PR #25](https://github.com/fivetran/dbt_amplitude/pull/25) includes the following updates:
 
 ## Breaking Change for dbt Core < 1.9.6
 
