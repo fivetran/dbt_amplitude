@@ -18,6 +18,7 @@ cd integration_tests
 dbt deps
 if [ "$db" = "databricks-sql" ]; then
 dbt seed --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db" --full-refresh
+dbt source freshness --target "$db" || echo "...Only verifying freshness runs…"
 dbt compile --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db"
 dbt run --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db" --full-refresh
 dbt test --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db"
@@ -25,6 +26,7 @@ dbt run --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db"
 dbt test --vars '{amplitude_schema: amplitude_sqlw_tests}' --target "$db"
 else
 dbt seed --target "$db" --full-refresh
+dbt source freshness --target "$db" || echo "...Only verifying freshness runs…"
 dbt compile --target "$db"
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
