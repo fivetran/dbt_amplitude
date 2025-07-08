@@ -35,5 +35,23 @@ seeds:
       +column_types:
         id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
+        event_properties: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        group_properties: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        user_properties: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+    amplitude_event_bq_json_data:
+      +enabled: "{{ target.type == 'bigquery' }}"
+      +column_types:
+        id: "INT64"
+        app: "INT64"
+        amplitude_id: "INT64"
+        event_type_id: "INT64"
+        project_name: "INT64"
+        schema: "INT64"
+        session_id: "INT64"
+        user_id: string
+        event_properties: json
+        group_properties: json
+        user_properties: json
+
 flags:
   send_anonymous_usage_stats: False
