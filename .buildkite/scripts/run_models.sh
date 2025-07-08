@@ -32,5 +32,9 @@ dbt run --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run --target "$db"
 dbt test --target "$db"
+if [ "$db" = "bigquery" ]; then
+dbt run --vars '{amplitude_event_identifier: amplitude_event_bq_json_data}' --target "$db" --full-refresh
+dbt test --target "$db"
+fi
 fi
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
