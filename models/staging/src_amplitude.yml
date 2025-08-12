@@ -1,0 +1,185 @@
+version: 2
+
+sources: 
+  - name: amplitude
+    database: "{% if target.type != 'spark'%}{{ var('amplitude_database', target.database) }}{% endif %}"
+    schema: "{{ var('amplitude_schema', 'amplitude')}}"
+
+    loader: fivetran
+    config:
+      loaded_at_field: _fivetran_synced
+      freshness:
+        warn_after: {count: 72, period: hour}
+        error_after: {count: 96, period: hour}
+
+    tables:
+      - name: event
+        identifier: "{{ var('amplitude_event_identifier', 'event')}}"
+        description: Each record represents an event sent for your project. Definitions are sourced from the Amplitude documentation [here](https://www.docs.developers.amplitude.com/analytics/apis/http-v2-api/#upload-request-body-parameters).
+        config:
+          freshness: # make it more strict for the event table
+            warn_after: {count: 6, period: hour}
+            error_after: {count: 12, period: hour}
+        columns:
+          - name: _fivetran_deleted
+            description: Timestamp of when Fivetran marked a record as deleted.
+          - name: _fivetran_synced
+            description: Timestamp of when Fivetran synced a record.
+          - name: amplitude_id
+            description: An internal ID used to count unique users.
+          - name: ad_id
+            description: >
+              (Android) Google Play Services advertising ID (AdID). This usually is wiped
+              after ingestion and therefore will be blank
+          - name: amplitude_attribution_ids
+            description: >
+              Anonymized hash of the advertising IDs that Amplitude stores for internal purposes;
+              not useful for customers by any means. But this will appear if
+              advertising IDs were sent which proves that adid/idfv existed even though
+              currently wiped
+          - name: app
+            description: Project ID found in your project's Settings page
+          - name: city
+            description: City where event was registered.
+          - name: client_event_time
+            description: >
+              Local timestamp (UTC) of when the device logged the event.
+          - name: client_upload_time
+            description: The local timestamp (UTC) of when the device uploaded the event.
+          - name: country
+            description: Country where event was registered.
+          - name: data
+            description: >
+              Dictionary where certain fields such as first_event and merged_amplitude_id
+              are stored. Ex, {"first_event":true}
+          - name: device_brand
+            description: Brand of device where event was registered on.
+          - name: device_carrier
+            description: Carrier of device where event was registered on.
+          - name: device_family
+            description: Device family. Ex, Apple iPhone
+          - name: device_id
+            description: The device specific identifier
+          - name: device_manufacturer
+            description: Manufacturer of device where event was registered on.
+          - name: device_model
+            description: The model of device where event was registered on.
+          - name: device_type
+            description: Type of device where event was registered on.
+          - name: dma
+            description: Designated marketing area (DMA)
+          - name: id
+            description: A counter that distinguishes events
+          - name: event_properties
+            description: >
+              Event properties are attributes of the events your users fire, and which you then send to Amplitude. Each event will have its own set of event properties. The nature of these properties depends on both the type of product you have, and the specific information you're most interested in discovering. For instance, if Swipe is an event you're tracking, the event property Direction could have the values Left or Right.
+              Some example event properties are description, category, type, duration, level, percent completed, count, source, status, number, lives, authenticated, error number, rank, action, and mode. 
+          - name: event_time
+            description: >
+              Amplitude timestamp (UTC) which is the client_event_time adjusted by the
+              difference between server_received_time and client_upload_time,
+              specifically: event_time = client_event_time + (server_received_time -
+              client_upload_time) 2015-08-10T12:00:00.000000 We use this timestamp to
+              organize events on Amplitude charts. Note: If the difference between
+              server_received_time and client_upload_time is less than 60 seconds, the
+              event_time will not be adjusted and will equal the client_event_time
+          - name: event_type
+            description: The assigned type of event. Example 'Add Friend'
+          - name: event_type_id
+            description: Internal identifier on Amplitude.
+          - name: group_properties
+            description: A dictionary of key-value pairs that represent data tied to the group. Each distinct value appears as a group segment on the Amplitude dashboard. You can store property values in an array, and date values are transformed into string values.
+          - name: groups
+            description: Group types. See the Accounts documentation for more information.
+          - name: idfa
+            description: >
+              (iOS) Identifier for Advertiser. This usually is wiped after ingestion and
+              therefore will be blank
+          - name: _insert_id
+            description: >
+              A unique identifier for the event. Amplitude deduplicates subsequent events sent with the same device_id and insert_id within the past 7 days. Amplitude recommends generating a UUID or using some combination of device_id, user_id, event_type, event_id, and time.  
+          - name: ip_address
+            description: IP address
+          - name: is_attribution_event
+            description: Boolean of whether event was an attribution event
+          - name: language
+            description: The language set by the user
+          - name: library
+            description: Library being used to send the event data.
+          - name: location_lat
+            description: Latitude
+          - name: location_lng
+            description: Longitude
+          - name: os_name
+            description: OS name where event was registered on.
+          - name: os_version
+            description: OS version where event was registered on.
+          - name: paying
+            description: Boolean of whether the user has ever logged any revenue, otherwise '(none)'. Note the property value can be modified via the\_Identify API.
+          - name: platform
+            description: Platform of the device.
+          - name: processed_time
+            description: Time of when event was processed
+          - name: project_name
+            description: Project ID
+          - name: region
+            description: Region where event was registered on.
+          - name: schema
+            description: Schema ID
+          - name: server_received_time
+            description: Amplitude timestamp (UTC) of when servers received the event
+          - name: server_upload_time
+            description: Amplitude timestamp (UTC) of when the event data was uploaded to Amplitude servers
+          - name: session_id
+            description: The session start time in milliseconds since epoch
+          - name: start_version
+            description: App version the user was first tracked on
+          - name: user_creation_time
+            description: Event_time (UTC) of the user's first event
+          - name: user_id
+            description: A readable ID specified by you
+          - name: user_properties
+            description: An attribute that describes a useful detail about the user it's attached to. Amplitude sends user properties with every event. 
+          - name: uuid
+            description: A unique identifier per row (event sent)
+          - name: version_name
+            description: The app version
+
+      - name: event_type
+        identifier: "{{ var('amplitude_event_type_identifier', 'event_type')}}"
+        description: Each record represents information about an event type. Definitions are sourced from the Amplitude documentation [here](https://www.docs.developers.amplitude.com/analytics/apis/dashboard-rest-api/?h=flow_hidden).
+        columns:
+          - name: _fivetran_deleted
+            description: Timestamp of when Fivetran marked a record as deleted
+          - name: _fivetran_synced
+            description: Timestamp of when Fivetran synced a record
+          - name: autohidden
+            description: Whether event type is hidden
+          - name: deleted
+            description: Whether event type is deleted
+          - name: display
+            description: The display name of the event
+          - name: flow_hidden
+            description: If the event is hidden from Pathfinder/Pathfinder Users or not
+          - name: hidden
+            description: If the event is hidden or not.
+          - name: id
+            description: Event type ID
+          - name: in_waitroom
+            description: Whether event type is in waitroom
+          - name: name
+            description: Event name
+          - name: non_active
+            description: If the event is marked inactive or not
+          - name: project_name
+            description: Project name
+          - name: timeline_hidden
+            description: If the event is hidden or not
+          - name: totals
+            description: The total number of times the event has happened this week
+          - name: totals_delta
+            description: This represents the change in event volume from the previous week.
+          - name: value
+            description: Name of the event in the raw data.
+          - name: waitroom_approved
+            description: Waitroom approved

@@ -1,5 +1,5 @@
 name: 'amplitude_integration_tests'
-version: '0.7.0'
+version: '1.0.0'
 config-version: 2
 profile: 'integration_tests'
 
@@ -12,7 +12,7 @@ models:
   # +schema: "amplitude_{{ var('directed_schema','dev') }}"
 
 vars:
-  amplitude_source:
+  amplitude:
     amplitude_event_identifier: "amplitude_event_data"
     amplitude_event_type_identifier: "amplitude_event_type_data"
     amplitude_schema: amplitude_integration_tests_5
