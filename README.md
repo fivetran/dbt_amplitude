@@ -1,4 +1,4 @@
-# Amplitude Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
+# Amplitude dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
 
 <p align="left">
     <a alt="License"
