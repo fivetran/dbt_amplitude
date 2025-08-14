@@ -18,6 +18,8 @@ vars:
     amplitude_schema: amplitude_integration_tests_5
 
 seeds:
+  +docs:
+    show: False
   amplitude_integration_tests:
     +column_types:
       _fivetran_synced: timestamp
@@ -37,3 +39,5 @@ seeds:
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
 flags:
   send_anonymous_usage_stats: False
+
+  use_colors: True

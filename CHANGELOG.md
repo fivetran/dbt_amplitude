@@ -19,6 +19,10 @@
   - Removed all `accepted_values` tests.
   - Moved `loaded_at_field: _fivetran_synced` under the `config:` block in `src_amplitude.yml`.
 
+### Under the Hood
+- Updated conditions in `.github/workflows/auto-release.yml`.
+- Added `.github/workflows/generate-docs.yml`.
+
 # dbt_amplitude v0.7.0
 
 [PR #25](https://github.com/fivetran/dbt_amplitude/pull/25) includes the following updates:
