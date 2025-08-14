@@ -12,7 +12,7 @@
 with event_data_raw as (
 
     select events.*
-    from {{ var('event') }} as events
+    from {{ ref('stg_amplitude__event') }} as events
 
     {% if is_incremental() %}
     where event_day >= {{ amplitude.amplitude_lookback(from_date='max(event_day)', datepart = 'day', interval=var('lookback_window', 7)) }}
@@ -39,7 +39,7 @@ event_data as (
 event_type as (
 
     select * 
-    from {{ var('event_type') }}
+    from {{ ref('stg_amplitude__event_type') }}
 ),
 
 session_data as (
