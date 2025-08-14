@@ -91,7 +91,7 @@ vars:
 ### Step 4: Configure event date range
 Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. 
 
-The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude/blob/main/models/staging/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
 
 ```yml
 vars:
@@ -116,7 +116,7 @@ vars:
 
 #### Change source table references
 If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:
-> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
+> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
 vars:

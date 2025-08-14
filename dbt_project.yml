@@ -8,8 +8,11 @@ models:
       +schema: int_amplitude
     +schema: amplitude
     staging:
-      +schema: amplitude_source
-      +materialized: view
+      +schema: _source_amplitude
+      materialized: table
+      tmp:
+        materialized: view
+
 vars:
   amplitude:
     event_type: "{{ source('amplitude', 'event_type') }}"

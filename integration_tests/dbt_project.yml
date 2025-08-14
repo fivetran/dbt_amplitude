@@ -32,12 +32,11 @@ seeds:
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         schema: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         session_id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
-        user_id: "{{ 'varchar(100)' if target.name in ('redshift', 'postgres') else 'string' }}"
+        user_id: "{{ 'varchar(100)' if target.type in ('redshift', 'postgres') else 'string' }}"
     amplitude_event_type_data:
       +column_types:
         id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
 flags:
   send_anonymous_usage_stats: False
-
   use_colors: True
