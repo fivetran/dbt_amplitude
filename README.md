@@ -123,8 +123,8 @@ vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 
-#### Change build schema
-By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_amplitude`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
+#### Change the Build Schema
+By default, this package builds out the Amplitude staging models within a schema titled (<target_schema> + `_source_amplitude`) in your target database, and the Amplitude end models in a schema titled (<target_schema> + `amplitude`) in your target database. If this is not where you would like your Amplitude data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
