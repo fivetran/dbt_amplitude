@@ -1,5 +1,5 @@
 name: 'amplitude_integration_tests'
-version: '0.7.0'
+version: '1.0.0'
 config-version: 2
 profile: 'integration_tests'
 
@@ -12,12 +12,14 @@ models:
   # +schema: "amplitude_{{ var('directed_schema','dev') }}"
 
 vars:
-  amplitude_source:
+  amplitude:
     amplitude_event_identifier: "amplitude_event_data"
     amplitude_event_type_identifier: "amplitude_event_type_data"
     amplitude_schema: amplitude_integration_tests_5
 
 seeds:
+  +docs:
+    show: False
   amplitude_integration_tests:
     +column_types:
       _fivetran_synced: timestamp
@@ -30,10 +32,11 @@ seeds:
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         schema: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         session_id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
-        user_id: "{{ 'varchar(100)' if target.name in ('redshift', 'postgres') else 'string' }}"
+        user_id: "{{ 'varchar(100)' if target.type in ('redshift', 'postgres') else 'string' }}"
     amplitude_event_type_data:
       +column_types:
         id: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
         project_name: "{{ 'INT64' if target.type == 'bigquery' else 'bigint' }}"
 flags:
   send_anonymous_usage_stats: False
+  use_colors: True

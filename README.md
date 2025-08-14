@@ -1,4 +1,4 @@
-# Amplitude Modeling dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
+# Amplitude dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
 
 <p align="left">
     <a alt="License"
@@ -10,10 +10,13 @@
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a alt="PRs">
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
+    <a alt="Fivetran Quickstart Compatible"
+        href="https://fivetran.com/docs/transformations/dbt/quickstart">
+        <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
 ## What does this dbt package do?
-- Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation) and builds off the output of our [Amplitude source package](https://github.com/fivetran/dbt_amplitude_source).
+- Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation).
 
 - Enables users to do the following:
   - Leverage event data that is enhanced with additional event type and pivoted custom property fields for later downstream use
@@ -67,10 +70,10 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=1.0.0", "<1.1.0"]
 ```
 
-Do NOT include the `amplitude_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/amplitude_source` in your `packages.yml` since this package has been deprecated.
 
 ### Step 3: Define database and schema variables
 By default, this package will run using your target database and the `amplitude` schema. If this is not where your Amplitude data is, add the following configuration to your root `dbt_project.yml` file:
@@ -88,7 +91,7 @@ vars:
 ### Step 4: Configure event date range
 Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. 
 
-The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude_source/blob/main/models/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
+The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude/blob/main/models/staging/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
 
 ```yml
 vars:
@@ -113,21 +116,23 @@ vars:
 
 #### Change source table references
 If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:
-> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
+> IMPORTANT: See the package's source [`dbt_project.yml`](https://github.com/fivetran/dbt_amplitude/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
 vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 
-#### Change build schema
-By default, this package builds the GitHub staging models within a schema titled (<target_schema> + `_stg_amplitude`) in your target database. If this is not where you would like your GitHub staging data to be written to, add the following configuration to your root `dbt_project.yml` file:
+#### Change the Build Schema
+By default, this package builds out the Amplitude staging models within a schema titled (<target_schema> + `_source_amplitude`) in your target database, and the Amplitude end models in a schema titled (<target_schema> + `amplitude`) in your target database. If this is not where you would like your Amplitude data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
 models:
-    amplitude_source:
-      +schema: my_new_schema_name # leave blank for just the target_schema
+    amplitude:
+      +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+      staging:
+        +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
 ```
 #### Pivot out nested fields containing custom properties
 The Amplitude schema allows for custom properties to be passed as nested fields (for example, `user_properties: {"Cohort":"Test A"}`). To pivot out the properties, add the following configurations to your root `dbt_project.yml` file:
@@ -179,7 +184,6 @@ Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analyt
 
 Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran.
 
-
 </details>
 
 ## Does this package have dependencies?
@@ -187,9 +191,6 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 > IMPORTANT: If you have any of these dependent packages in your own `packages.yml` file, we highly recommend that you remove them from your root `packages.yml` to avoid package version conflicts.
 ```yml
 packages:
-    - package: fivetran/amplitude_source
-      version: [">=0.5.0", "<0.6.0"]
-
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
 
