@@ -189,6 +189,8 @@ models:
         description: "{{ doc('source_relation') }}"
       - name: amplitude_user_id
         description: Unique key for each user, which is user_id by default. If user_id does not exist, use amplitude_id
+        tests:
+          - not_null
       - name: user_created_at
         description: Event_time (UTC) of the user's first event
       - name: first_session_at

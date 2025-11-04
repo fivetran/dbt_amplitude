@@ -1,5 +1,7 @@
 # dbt_amplitude v1.1.0
 
+[PR #30](https://github.com/fivetran/dbt_amplitude/pull/30) includes the following updates:
+
 ## Schema/Data Change (--full-refresh required after upgrading)
 **9 total changes • 3 breaking changes**
 
