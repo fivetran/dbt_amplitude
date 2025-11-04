@@ -13,12 +13,14 @@ fields as (
                 staging_columns=get_event_type_columns()
             )
         }}
+        {{ amplitude.apply_source_relation() }}
     from base
 ),
 
 final as (
-    
+
     select
+        source_relation,
         id as event_type_id,
         name as event_type_name,
         project_name,
@@ -43,7 +45,7 @@ surrogate as (
 
     select
         *,
-        {{ dbt_utils.generate_surrogate_key(['event_type_id','project_name']) }} as unique_event_type_id
+        {{ dbt_utils.generate_surrogate_key(['source_relation','event_type_id','project_name']) }} as unique_event_type_id
     from final
 )
 

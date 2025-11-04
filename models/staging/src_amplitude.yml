@@ -1,12 +1,13 @@
 version: 2
 
-sources: 
+sources:
   - name: amplitude
     database: "{% if target.type != 'spark'%}{{ var('amplitude_database', target.database) }}{% endif %}"
     schema: "{{ var('amplitude_schema', 'amplitude')}}"
 
     loader: fivetran
     config:
+      enabled: "{{ var('amplitude_sources', []) == [] }}"
       loaded_at_field: _fivetran_synced
       freshness:
         warn_after: {count: 72, period: hour}

@@ -1,5 +1,5 @@
 name: 'amplitude_integration_tests'
-version: '1.0.0'
+version: '1.1.0'
 config-version: 2
 profile: 'integration_tests'
 
@@ -15,7 +15,7 @@ vars:
   amplitude:
     amplitude_event_identifier: "amplitude_event_data"
     amplitude_event_type_identifier: "amplitude_event_type_data"
-    amplitude_schema: amplitude_integration_tests_5
+    amplitude_schema: amplitude_integration_tests
 
 seeds:
   +docs:

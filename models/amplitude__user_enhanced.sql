@@ -11,6 +11,7 @@ session_data as (
 )
 
 select
+    event_enhanced.source_relation,
     event_enhanced.amplitude_user_id,
     min(event_enhanced.user_creation_time) as user_created_at,
     min(event_enhanced.session_started_at) as first_session_at,
@@ -22,5 +23,6 @@ select
 
 from event_enhanced
 left join session_data
-    on event_enhanced.unique_session_id = session_data.unique_session_id
-group by 1
+    on event_enhanced.source_relation = session_data.source_relation
+    and event_enhanced.unique_session_id = session_data.unique_session_id
+group by 1, 2

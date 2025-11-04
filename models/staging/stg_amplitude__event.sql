@@ -13,16 +13,18 @@ fields as (
                 staging_columns=get_event_columns()
             )
         }}
+        {{ amplitude.apply_source_relation() }}
     from base
 ),
 
 final as (
 
     select
+        source_relation,
         id as event_id,
         cast(event_time as {{ dbt.type_timestamp() }}) as event_time,
         cast({{ dbt.date_trunc('day', 'event_time') }} as date) as event_day,
-        {{ dbt_utils.generate_surrogate_key(['user_id','session_id']) }} as unique_session_id,
+        {{ dbt_utils.generate_surrogate_key(['source_relation','user_id','session_id']) }} as unique_session_id,
         coalesce(cast(user_id as {{ dbt.type_string() }}), (cast(amplitude_id as {{ dbt.type_string() }}))) as amplitude_user_id,
         event_properties,
         event_type,
@@ -81,7 +83,7 @@ surrogate as (
 
     select
         *,
-        {{ dbt_utils.generate_surrogate_key(['event_id','device_id','client_event_time','amplitude_user_id']) }} as unique_event_id
+        {{ dbt_utils.generate_surrogate_key(['source_relation','event_id','device_id','client_event_time','amplitude_user_id']) }} as unique_event_id
     from final
 )
 

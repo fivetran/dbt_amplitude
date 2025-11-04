@@ -1,3 +1,27 @@
+# dbt_amplitude v1.1.0
+
+## Schema/Data Change (--full-refresh required after upgrading)
+**9 total changes • 3 breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | ----| --- | ----- |
+| All models | New column | | `source_relation` | Identifies the source connection when using multiple Amplitude connections |
+| `amplitude__event_enhanced` | New column | | `source_relation` | **Breaking:** Incremental model requires `--full-refresh` after upgrading |
+| `amplitude__sessions` | New column | | `source_relation` | **Breaking:** Incremental model requires `--full-refresh` after upgrading |
+| `amplitude__daily_performance` | New column | | `source_relation` | **Breaking:** Incremental model requires `--full-refresh` after upgrading |
+| `stg_amplitude__event` | Updated surrogate key | `unique_event_id` = `event_id` + `device_id` + `client_event_time` + `amplitude_user_id` | `unique_event_id` = `source_relation` + `event_id` + `device_id` + `client_event_time` + `amplitude_user_id` | Updated to include `source_relation` |
+| `stg_amplitude__event` | Updated surrogate key | `unique_session_id` = `user_id` + `session_id` | `unique_session_id` = `source_relation` + `user_id` + `session_id` | Updated to include `source_relation` |
+| `stg_amplitude__event_type` | Updated surrogate key | `unique_event_type_id` = `event_type_id` + `project_name` | `unique_event_type_id` = `source_relation` + `event_type_id` + `project_name` | Updated to include `source_relation` |
+| `amplitude__event_enhanced` | Updated surrogate key | `unique_key` = `unique_event_id` + `unique_event_type_id` | `unique_key` = `source_relation` + `unique_event_id` + `unique_event_type_id` | Updated to include `source_relation` |
+| `amplitude__daily_performance` | Updated surrogate key | `daily_unique_key` = `event_day` + `event_type` | `daily_unique_key` = `source_relation` + `event_day` + `event_type` | Updated to include `source_relation` |
+
+## Feature Update
+- **Union Data Functionality**: This release supports running the package on multiple Amplitude source connections. See the [README](https://github.com/fivetran/dbt_amplitude/tree/main?tab=readme-ov-file#step-3-define-database-and-schema-variables) for details on how to leverage this feature.
+
+## Tests Update
+- Removes uniqueness tests. The new unioning feature requires combination-of-column tests to consider the new `source_relation` column in addition to the existing primary key, but this is not supported across dbt versions.
+ - These tests will be reintroduced once a version-agnostic solution is available.
+
 # dbt_amplitude v1.0.0
 
 [PR #29](https://github.com/fivetran/dbt_amplitude/pull/29) includes the following updates:

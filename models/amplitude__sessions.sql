@@ -21,14 +21,14 @@ with event_data_raw as (
 
 -- deduplicate
 event_data as (
-    
-    select * 
+
+    select *
     from (
-        select 
+        select
             *,
             case when _insert_id is not null
-                then row_number() over (partition by _insert_id order by client_upload_time desc)
-                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+                then row_number() over (partition by _insert_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
             end as nth_event_record
 
         from event_data_raw
@@ -39,6 +39,7 @@ event_data as (
 session_agg as (
 
     select
+        source_relation,
         unique_session_id,
         user_id,
         count(event_id) as events_per_session,
@@ -46,12 +47,13 @@ session_agg as (
         max(event_time) as session_ended_at,
         {{ dbt.datediff('min(event_time)', 'max(event_time)', 'second') }} / 60 as session_length_in_minutes
     from event_data
-    {{ dbt_utils.group_by(2) }}
+    {{ dbt_utils.group_by(3) }}
 ),
 
 session_ranking as (
 
-    select 
+    select
+        source_relation,
         unique_session_id,
         user_id,
         events_per_session,
@@ -60,8 +62,8 @@ session_ranking as (
         session_length_in_minutes,
         cast({{ dbt.date_trunc('day', 'session_started_at') }} as date) as session_started_at_day,
         cast({{ dbt.date_trunc('day', 'session_ended_at') }} as date) as session_ended_at_day,
-        case 
-            when user_id is not null then row_number() over (partition by user_id order by session_started_at) 
+        case
+            when user_id is not null then row_number() over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_started_at)
             else null
         end as user_session_number
     from session_agg
@@ -69,14 +71,14 @@ session_ranking as (
 
 session_lag as (
     select
-        *, 
+        *,
         -- determine prior sessions' end time, then in the following cte calculate the difference between current session's start time and last session's end time to determine the time in between sessions
-        case 
-            when user_id is not null then lag(session_ended_at,1) over (partition by user_id order by session_ended_at) 
+        case
+            when user_id is not null then lag(session_ended_at,1) over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_ended_at)
             else null
         end as last_session_ended_at,
-        case 
-            when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id order by session_ended_at_day) 
+        case
+            when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_ended_at_day)
             else null
         end as last_session_ended_at_day
     from session_ranking

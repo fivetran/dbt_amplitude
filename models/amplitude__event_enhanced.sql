@@ -21,14 +21,14 @@ with event_data_raw as (
 
 -- deduplicate
 event_data as (
-    
-    select * 
+
+    select *
     from (
-        select 
+        select
             *,
             case when _insert_id is not null
-                then row_number() over (partition by _insert_id order by client_upload_time desc)
-                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id order by client_upload_time desc)
+                then row_number() over (partition by _insert_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
             end as nth_event_record
 
         from event_data_raw
@@ -51,7 +51,8 @@ session_data as (
 event_enhanced as (
 
     select
-        event_data.unique_event_id
+        event_data.source_relation
+        , event_data.unique_event_id
         , event_data.unique_session_id
         , cast(event_data.amplitude_user_id as {{ dbt.type_string() }}) as amplitude_user_id
         , event_data.event_id
@@ -67,8 +68,8 @@ event_enhanced as (
         , event_type.event_type_id
         , event_type.event_type_name
         , event_data.session_id
-        , row_number() over (partition by session_id order by event_time asc) as session_event_number
-        , row_number() over (partition by amplitude_user_id order by event_time asc) as user_event_number
+        , row_number() over (partition by session_id {{ amplitude.partition_by_source_relation(alias='event_data') }} order by event_time asc) as session_event_number
+        , row_number() over (partition by amplitude_user_id {{ amplitude.partition_by_source_relation(alias='event_data') }} order by event_time asc) as user_event_number
         , event_data.group_types
 
         {% if var('group_properties_to_pivot') %},
@@ -125,16 +126,18 @@ event_enhanced as (
 
     from event_data
     left join event_type
-        on event_data.event_type_id = event_type.event_type_id
+        on event_data.source_relation = event_type.source_relation
+        and event_data.event_type_id = event_type.event_type_id
     left join session_data
-        on event_data.unique_session_id = session_data.unique_session_id
+        on event_data.source_relation = session_data.source_relation
+        and event_data.unique_session_id = session_data.unique_session_id
 ),
 
 final as (
 
-    select 
+    select
         *,
-        {{ dbt_utils.generate_surrogate_key(['unique_event_id','unique_event_type_id']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['source_relation','unique_event_id','unique_event_type_id']) }} as unique_key
     from event_enhanced
 )
 
