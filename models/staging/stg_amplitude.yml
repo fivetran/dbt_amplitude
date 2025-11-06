@@ -5,15 +5,17 @@ models:
     description: Table of all events tracked by Amplitude. Definitions are sourced from the Amplitude documentation [here](https://www.docs.developers.amplitude.com/analytics/apis/http-v2-api/#upload-request-body-parameters).
 
     columns:
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
       - name: unique_event_id
-        description: A unique key for each event, concatenating event_id, device_id, client_event_time, and amplitude_user_id.
+        description: A unique key for each event, concatenating source_relation, event_id, device_id, client_event_time, and amplitude_user_id.
         tests:
           - unique
           - not_null
       - name: event_id
         description: A counter that distinguishes events.
       - name: unique_session_id
-        description: A unique key for each session, concatenating user_id and session_id.
+        description: A unique key for each session, concatenating source_relation, user_id, and session_id.
       - name: amplitude_id
         description: An internal ID used to identify unique users.
       - name: amplitude_user_id
@@ -139,8 +141,10 @@ models:
   - name: stg_amplitude__event_type
     description: Table of all events types. Definitions are sourced from the Amplitude documentation [here](https://www.docs.developers.amplitude.com/analytics/apis/dashboard-rest-api/?h=flow_hidden).
     columns:
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
       - name: unique_event_type_id
-        description:  A unique key for each event, concatenating event_type_id and project_name. 
+        description:  A unique key for each event, concatenating source_relation, event_type_id, and project_name.
         tests:
           - unique
           - not_null

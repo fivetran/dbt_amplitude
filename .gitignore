@@ -8,6 +8,7 @@ logs/
 profiles.yml
 target/
 *.log
+CLAUDE.md
 
 # IDE files
 .idea/

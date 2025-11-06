@@ -3,13 +3,16 @@
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
+{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+
+-- this test ensures the amplitude__sessions end model matches the prior version
 with prod as (
-    select {{ dbt_utils.star(from=ref('amplitude__sessions'), except=var('consistency_test_exclude_metrics', [])) }}
+    select {{ dbt_utils.star(from=ref('amplitude__sessions'), except=exclude_cols) }}
     from {{ target.schema }}_amplitude_prod.amplitude__sessions
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('amplitude__sessions'), except=var('consistency_test_exclude_metrics', [])) }}
+    select {{ dbt_utils.star(from=ref('amplitude__sessions'), except=exclude_cols) }}
     from {{ target.schema }}_amplitude_dev.amplitude__sessions
 ), 
 
