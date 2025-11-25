@@ -1,3 +1,10 @@
+# dbt_amplitude v1.2.0
+
+[PR #31](https://github.com/fivetran/dbt_amplitude/pull/31) includes the following updates:
+
+## Features
+  - Increases the required dbt version upper limit to v3.0.0
+
 # dbt_amplitude v1.1.0
 
 [PR #30](https://github.com/fivetran/dbt_amplitude/pull/30) includes the following updates:
