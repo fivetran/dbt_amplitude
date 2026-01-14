@@ -15,3 +15,22 @@ public_models: [
   "amplitude__daily_performance",
   "amplitude__sessions"
 ]
+
+supported_vars:
+  amplitude__date_range_start:
+    type: string
+    value: "2020-01-01"
+    description: "Start date for the window of `EVENT` data to transform (YYYY-MM-DD format)"
+    display_name: "Date Range Start"
+
+  amplitude__date_range_end:
+    type: string
+    description: "End date for the window of `EVENT` data to transform (YYYY-MM-DD format)"
+    display_name: "Date Range End"
+
+  lookback_window:
+    type: integer
+    value: 3
+    description: "Number of days into the past that the models will look back to capture late-arriving records on incremental runs"
+    display_name: "Incremental Run Lookback Window (Days)"
+
