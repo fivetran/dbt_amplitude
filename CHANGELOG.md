@@ -1,3 +1,14 @@
+# dbt_amplitude v1.3.0
+
+[PR #32](https://github.com/fivetran/dbt_amplitude/pull/32) includes the following updates:
+
+## Documentation
+- Updates README with standardized Fivetran formatting.
+
+## Under the Hood
+- In the `quickstart.yml` file:
+  - Adds `supported_vars` for Quickstart UI customization.
+
 # dbt_amplitude v1.2.0
 
 [PR #31](https://github.com/fivetran/dbt_amplitude/pull/31) includes the following updates:

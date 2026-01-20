@@ -1,4 +1,5 @@
-# Amplitude dbt Package ([Docs](https://fivetran.github.io/dbt_amplitude/))
+<!--section="amplitude_transformation_model"-->
+# Amplitude dbt Package
 
 <p align="left">
     <a alt="License"
@@ -11,40 +12,73 @@
     <a alt="PRs">
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
     <a alt="Fivetran Quickstart Compatible"
-        href="https://fivetran.com/docs/transformations/dbt/quickstart">
+        href="https://fivetran.com/docs/transformations/data-models/quickstart-management#quickstartmanagement">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
+This dbt package transforms data from Fivetran's Amplitude connector into analytics-ready tables.
+
+## Resources
+
+- Number of materialized models¹: 8
+- Connector documentation
+  - [Amplitude connector documentation](https://fivetran.com/docs/connectors/applications/amplitude)
+  - [Amplitude ERD](https://fivetran.com/docs/connectors/applications/amplitude#schemainformation)
+- dbt package documentation
+  - [GitHub repository](https://github.com/fivetran/dbt_amplitude)
+  - [dbt Docs](https://fivetran.github.io/dbt_amplitude/#!/overview)
+  - [DAG](https://fivetran.github.io/dbt_amplitude/#!/overview?g_v=1)
+  - [Changelog](https://github.com/fivetran/dbt_amplitude/blob/main/CHANGELOG.md)
+
 ## What does this dbt package do?
-- Produces modeled tables that leverage Amplitude data from [Fivetran's connector](https://fivetran.com/docs/applications/amplitude) in the format described by [this ERD](https://fivetran.com/docs/applications/amplitude#schemainformation).
+This package enables you to leverage enhanced event data, view aggregated session and user metrics, and analyze daily performance metrics. It creates enriched models with metrics focused on event analysis, user behavior, and session tracking.
 
-- Enables users to do the following:
-  - Leverage event data that is enhanced with additional event type and pivoted custom property fields for later downstream use
-  - View aggregated metrics for each unique session
-  - View aggregated metrics for each unique user
-  - View daily performance metrics for each event type
-  - Use the enhanced event data to leverage dbt metrics to generate additional analytics
-  - Incorporate the [dbt Product Analytics](https://github.com/mjirv/dbt_product_analytics) package to further enhance Amplitude data, like for funnel and retention analysis
+### Output schema
+Final output tables are generated in the following target schema:
 
-<!--section="amplitude_transformation_model"-->
-This package also generates a comprehensive data dictionary of your source and modeled Amplitude data through the [dbt docs site](https://fivetran.github.io/dbt_amplitude/). You can also refer to the table below for a detailed view of all tables materialized within this package by default.
+```
+<your_database>.<connector/schema_name>_amplitude
+```
 
-|**Table**|**Description**
------|-----
-| [amplitude__event_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__event_enhanced)     | Each record represents event data, enhanced with event type data and unnested event, group, and user properties.
-| [amplitude__sessions](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__sessions)         | Each record represents a distinct session with aggregated metrics for that session.
-| [amplitude__user_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__user_enhanced)               | Each record represents a distinct user with aggregated metrics for that user.
-| [amplitude__daily_performance](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__daily_performance)               | Each record represents performance metrics for each distinct day and event type.
+### Final output tables
 
-### Materialized Models
-Each Quickstart transformation job run materializes 8 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
-<!--section-end-->
+By default, this package materializes the following final tables:
 
-## How do I use the dbt package?
-### Step 1: Prerequisites
+| Table | Description |
+| :---- | :---- |
+| [amplitude__event_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__event_enhanced) | Tracks individual user events with enriched event type data, device information, location details, and unnested custom properties to analyze user behavior and product interactions at the event level. <br></br>**Example Analytics Questions:**<ul><li>Which event types are most frequently triggered by users across different platforms or devices?</li><li>How do event patterns vary by user location (city, country) or device type (iOS vs Android)?</li><li>What custom event properties correlate with higher user engagement or conversion?</li></ul>|
+| [amplitude__sessions](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__sessions) | Aggregates user activity into distinct sessions with metrics on session duration, event counts, and user actions to understand engagement patterns and session quality. <br></br>**Example Analytics Questions:**<ul><li>What is the average session duration and event count per session by user segment?</li><li>Which sessions have the highest engagement levels based on event frequency?</li><li>How do session metrics vary between new and returning users?</li></ul>|
+| [amplitude__user_enhanced](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__user_enhanced) | Provides a comprehensive view of each user with lifetime metrics including total events, sessions, and engagement patterns to understand user behavior and value. <br></br>**Example Analytics Questions:**<ul><li>Which users are most engaged based on total events and session counts?</li><li>What is the distribution of user engagement metrics across different user segments?</li><li>How do user engagement metrics change over their lifetime?</li></ul>|
+| [amplitude__daily_performance](https://fivetran.github.io/dbt_amplitude/#!/model/model.amplitude.amplitude__daily_performance) | Summarizes daily event activity by event type with user and session metrics to track product usage trends and identify patterns over time. <br></br>**Example Analytics Questions:**<ul><li>How are daily active users and event volumes trending by event type?</li><li>Which event types show the strongest day-over-day or week-over-week growth?</li><li>What days of the week have the highest event activity for key user actions?</li></ul>|
+
+¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+
+---
+
+## Prerequisites
 To use this dbt package, you must have the following:
+
 - At least one Fivetran Amplitude connection syncing data into your destination.
 - A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
+
+## How do I use the dbt package?
+You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
+
+- To add the package in the Fivetran dashboard, follow our [Quickstart guide](https://fivetran.com/docs/transformations/data-models/quickstart-management).
+- To add the package to your dbt project, follow the setup instructions in the dbt package's [README file](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#how-do-i-use-the-dbt-package) to use this package.
+
+<!--section-end-->
+
+### Install the package
+Include the following Amplitude package version in your `packages.yml` file:
+> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+```yaml
+packages:
+  - package: fivetran/amplitude
+    version: [">=1.3.0", "<1.4.0"]
+```
+
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/amplitude_source` in your `packages.yml` since this package has been deprecated.
 
 #### Databricks dispatch configuration
 If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml` file. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
@@ -64,18 +98,7 @@ For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen dele
 
 > Regardless of strategy, we recommend that users periodically run a --full-refresh to ensure a high level of data quality.
 
-### Step 2: Install the package
-Include the following Amplitude package version in your `packages.yml` file:
-> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-```yaml
-packages:
-  - package: fivetran/amplitude
-    version: [">=1.2.0", "<1.3.0"]
-```
-
-> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/amplitude_source` in your `packages.yml` since this package has been deprecated.
-
-### Step 3: Define database and schema variables
+### Define database and schema variables
 
 #### Option A: Single connection
 By default, this package runs using your [destination](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile) and the `amplitude` schema. If this is not where your Amplitude data is (for example, if your Amplitude schema is named `amplitude_fivetran`), add the following configuration to your root `dbt_project.yml` file:
@@ -134,7 +157,7 @@ sources:
     tables: # copy and paste from amplitude/models/staging/src_amplitude.yml - see https://support.atlassian.com/bitbucket-cloud/docs/yaml-anchors/ for how to use anchors to only do so once
 ```
 
-> **Note**: If there are source tables you do not have (see [Step 4](https://github.com/fivetran/dbt_amplitude?tab=readme-ov-file#step-4-configure-event-date-range)), you may still include them, as long as you have set the right variables to `False`.
+> **Note**: If there are source tables you do not have (see [Configure event date range](https://github.com/fivetran/dbt_amplitude?tab=readme-ov-file#configure-event-date-range)), you may still include them, as long as you have set the right variables to `False`.
 
 2. Set the `has_defined_sources` variable (scoped to the `amplitude` package) to `True`, like such:
 ```yml
@@ -143,7 +166,7 @@ vars:
   amplitude:
     has_defined_sources: true
 ```
-### Step 4: Configure event date range
+### Configure event date range
 Because of the typical volume of event data, you may want to limit this package's models to work with a recent date range. 
 
 The default date range starts at `'2020-01-01'` and extends up to and including the current date for the [`stg_amplitude__event`](https://github.com/fivetran/dbt_amplitude/blob/main/models/staging/stg_amplitude__event.sql) and [`date spine`](https://github.com/fivetran/dbt_amplitude/blob/main/models/intermediate/int_amplitude__date_spine.sql) models. To customize the date range, add the following configurations to your root `dbt_project.yml` file:
@@ -155,7 +178,7 @@ vars:
 ```
 NOTE: The `amplitude__daily_performance`, `amplitude__event_enhanced`, and `amplitude__sessions` models are materialized as incremental. Updating the date range in `dbt_project.yml` will only apply to newly ingested data. If you modify the date range variables, we recommend running `dbt run --full-refresh` to ensure consistency across the adjusted date range.
 
-### (Optional) Step 5: Additional configurations
+### (Optional) Additional configurations
 <details open><summary>Expand/collapse configurations</summary>
 
 #### Lookback Window
@@ -201,7 +224,7 @@ vars:
 </details>
 <br>
 
-### (Optional) Step 6: Using this package with the dbt Product Analytics package
+### (Optional) Using this package with the dbt Product Analytics package
 <details><summary>Expand for configurations</summary>
 
 The [dbt_product_analytics](https://github.com/mjirv/dbt_product_analytics) package contains macros that allows for further exploration such as event flow, funnel, and retention analysis. To leverage this in conjunction with this package, add the following configuration to your project's `packages.yml` file:
@@ -233,11 +256,11 @@ Refer to the [dbt_product_analytics](https://github.com/mjirv/dbt_product_analyt
 </details>
 <br>
 
-### (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
 
-Fivetran offers the ability for you to orchestrate your dbt project through the [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt) product. Refer to the linked docs for more information on how to setup your project for orchestration through Fivetran.
+Fivetran offers the ability for you to orchestrate your dbt project through [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt#transformationsfordbtcore). Learn how to set up your project for orchestration through Fivetran in our [Transformations for dbt Core™ setup guides](https://fivetran.com/docs/transformations/dbt/setup-guide#transformationsfordbtcoresetupguide).
 
 </details>
 
@@ -255,17 +278,21 @@ packages:
     - package: dbt-labs/spark_utils
       version: [">=0.3.0", "<0.4.0"]
 ```
+<!--section="amplitude_maintenance"-->
 ## How is this package maintained and can I contribute?
+
 ### Package Maintenance
-The Fivetran team maintaining this package **only** maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/amplitude/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_amplitude/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+The Fivetran team maintaining this package only maintains the [latest version](https://hub.getdbt.com/fivetran/amplitude/latest/) of the package. We highly recommend you stay consistent with the latest version of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_amplitude/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+
+### Contributions
+A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
+
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
 
 ### Opinionated Decisions
 In creating this package, which is meant for a wide range of use cases, we had to take opinionated stances on a few different questions we came across during development. We've consolidated significant choices we made in the [DECISIONLOG.md](https://github.com/fivetran/dbt_amplitude/blob/main/DECISIONLOG.md), and will continue to update as the package evolves. We are always open to and encourage feedback on these choices, and the package in general.
 
-### Contributions
-These dbt packages are developed by a small team of analytics engineers at Fivetran. However, the packages are made better by community contributions.
-
-We highly encourage and welcome contributions to this package. Check out [this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) on the best workflow for contributing to a package.
+<!--section-end-->
 
 ## Are there any resources available?
 - If you encounter any questions or want to reach out for help, see the [GitHub Issue](https://github.com/fivetran/dbt_amplitude/issues/new/choose) section to find the right avenue of support for you.
