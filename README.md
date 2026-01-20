@@ -67,16 +67,6 @@ You can either add this dbt package in the Fivetran dashboard or import it into 
 - To add the package in the Fivetran dashboard, follow our [Quickstart guide](https://fivetran.com/docs/transformations/data-models/quickstart-management).
 - To add the package to your dbt project, follow the setup instructions in the dbt package's [README file](https://github.com/fivetran/dbt_amplitude/blob/main/README.md#how-do-i-use-the-dbt-package) to use this package.
 
-### Database Incremental Strategies
-This package's incremental models are configured to leverage the different incremental strategies for each supported warehouse.
-
-For **BigQuery** and **Databricks All Purpose Cluster runtime** destinations, we have chosen insert_overwrite as the default strategy, which benefits from the partitioning capability. 
-> For **Databricks SQL Warehouse** destinations, models are materialized as tables without support for incremental runs.
-
-For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen delete+insert as the default strategy.  
-
-> Regardless of strategy, we recommend that users periodically run a --full-refresh to ensure a high level of data quality.
-
 <!--section-end-->
 
 ### Install the package
@@ -97,6 +87,16 @@ dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
 ```
+
+### Database Incremental Strategies
+This package's incremental models are configured to leverage the different incremental strategies for each supported warehouse.
+
+For **BigQuery** and **Databricks All Purpose Cluster runtime** destinations, we have chosen insert_overwrite as the default strategy, which benefits from the partitioning capability. 
+> For **Databricks SQL Warehouse** destinations, models are materialized as tables without support for incremental runs.
+
+For **Snowflake**, **Redshift**, and **Postgres** databases, we have chosen delete+insert as the default strategy.  
+
+> Regardless of strategy, we recommend that users periodically run a --full-refresh to ensure a high level of data quality.
 
 ### Define database and schema variables
 
