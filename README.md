@@ -75,7 +75,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=1.3.0", "<1.4.0"]
+    version: 1.3.1-a1
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/amplitude_source` in your `packages.yml` since this package has been deprecated.

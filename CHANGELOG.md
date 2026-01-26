@@ -1,3 +1,10 @@
+# dbt_amplitude v1.3.1-a1
+
+[PR #33](https://github.com/fivetran/dbt_amplitude/pull/33) includes the following updates:
+
+## Under the Hood
+- Adjusts the data type for date variables in the `quickstart.yml` from `string` to `date`.
+
 # dbt_amplitude v1.3.0
 
 [PR #32](https://github.com/fivetran/dbt_amplitude/pull/32) includes the following updates:
