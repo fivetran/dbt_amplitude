@@ -18,15 +18,10 @@ public_models: [
 
 supported_vars:
   amplitude__date_range_start:
-    type: string
+    type: date
     value: "2020-01-01"
     description: "Start date for the window of `EVENT` data to transform (YYYY-MM-DD format)"
     display_name: "Date Range Start"
-
-  amplitude__date_range_end:
-    type: string
-    description: "End date for the window of `EVENT` data to transform (YYYY-MM-DD format)"
-    display_name: "Date Range End"
 
   lookback_window:
     type: integer
