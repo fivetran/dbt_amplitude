@@ -1,6 +1,6 @@
 # dbt_amplitude v1.3.1
 
-[PR #33](https://github.com/fivetran/dbt_amplitude/pull/33) includes the following updates:
+[PR #34](https://github.com/fivetran/dbt_amplitude/pull/34) includes the following updates:
 
 ## Under the Hood
 - Removes the `amplitude__date_range_end` variable from the `quickstart.yml`
