@@ -1,6 +1,6 @@
 config-version: 2
 name: 'amplitude'
-version: '1.3.1'
+version: '1.3.2'
 require-dbt-version: [">=1.3.0", "<3.0.0"]
 models:
   amplitude:
@@ -9,9 +9,9 @@ models:
     +schema: amplitude
     staging:
       +schema: _source_amplitude
-      materialized: table
+      +materialized: table
       tmp:
-        materialized: view
+        +materialized: view
 
 vars:
   amplitude:
