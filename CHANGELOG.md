@@ -1,3 +1,10 @@
+# dbt_amplitude v1.3.2
+
+[PR #37](https://github.com/fivetran/dbt_amplitude/pull/37) includes the following updates:
+
+## Under the Hood
+- Prepends `materialized` configs in the `dbt_project.yml` with a plus sign (`+`). The plus sign is optional in dbt Core, but required for dbt Fusion.
+
 # dbt_amplitude v1.3.1
 
 [PR #34](https://github.com/fivetran/dbt_amplitude/pull/34) includes the following updates:
