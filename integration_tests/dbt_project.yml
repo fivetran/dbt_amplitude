@@ -8,6 +8,9 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
+  +persist_docs:
+    relation: true
+    columns: true
   +schema: "{{ 'amplitude_sqlw' if target.name == 'databricks-sql' else 'amplitude' }}"
   # +schema: "amplitude_{{ var('directed_schema','dev') }}"
 
