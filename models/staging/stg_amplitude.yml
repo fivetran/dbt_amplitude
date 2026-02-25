@@ -124,11 +124,9 @@ models:
         description: Event_time (UTC) of the user's first event.
       - name: user_id
         description: >
-          A readable ID specified by you.
-          Amplitude uses a combination of three different methods to identify your users: device IDs, Amplitude ID, and user IDs. The first comes directly from your users' devices, while the second is an ID that Amplitude automatically creates once it has enough information to conclusively identify a unique user. The user ID, however, is something you'd set up.
-          In Amplitude, a user ID is a unique identifier applied to individual users. Using them is optional, but recommended: your product should set a user ID once a user has created an account, logged in, or is otherwise identified in your product.
-          Amplitude can use a user ID to reconcile events across multiple devices under the same user ID. Additionally, a user's event data will be merged on the backend so that all anonymous events prior to the assignment of a user ID will be connected to the correct user. For this reason, you can wait to assign user IDs if that makes sense for your product. Conversely, this is also why you should not set user IDs for anonymous users.
-          Once set, user IDs in Amplitude cannot be changed.Once set, user IDs in Amplitude cannot be changed.
+          A readable ID that you define. Amplitude identifies users with device IDs, Amplitude IDs (auto-generated), and user IDs (set by you). A user ID is a unique identifier for a known user. It’s optional but recommended once a user creates an account, logs in, or is otherwise identified.
+          User IDs let Amplitude merge activity across devices and connect prior anonymous events to the identified user. Because of this, you can wait to assign a user ID until a user is known—but you should not set user IDs for anonymous users.
+          User IDs cannot be changed once set.
       - name: user_properties
         description: An attribute that describes a useful detail about the user it's attached to. Amplitude sends user properties with every event. 
       - name: uuid
