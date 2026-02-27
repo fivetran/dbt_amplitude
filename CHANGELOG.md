@@ -1,3 +1,6 @@
+## Documentation
+- Shortens the documentation of the `user_id` field to ensure the description can persist to the destination without error.
+
 # dbt_amplitude v1.3.2
 
 [PR #37](https://github.com/fivetran/dbt_amplitude/pull/37) includes the following updates:
