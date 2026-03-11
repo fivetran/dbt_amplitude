@@ -123,7 +123,7 @@ models:
       - name: user_creation_time
         description: Event_time (UTC) of the user's first event.
       - name: user_id
-        description: A readable ID you define for known users; while optional, it’s recommended after signup or login, allows Amplitude to merge cross-device activity and link prior anonymous events, should not be set for anonymous users, and cannot be changed once set.
+        description: A readable ID you define for known users. While optional, it is recommended that you assign a user_id after signup or login as it allows Amplitude to merge cross-device activity and link prior anonymous events. IDs should not be set for anonymous users, and cannot be changed once set.
       - name: user_properties
         description: An attribute that describes a useful detail about the user it's attached to. Amplitude sends user properties with every event. 
       - name: uuid

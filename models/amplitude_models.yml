@@ -105,7 +105,7 @@ models:
       - name: group_types
         description: Group types. "Groups" in the source table, renamed here. See the Accounts documentation for more information.
       - name: user_id
-        description: A readable ID you define for known users; while optional, it’s recommended after signup or login, allows Amplitude to merge cross-device activity and link prior anonymous events, should not be set for anonymous users, and cannot be changed once set.
+        description: A readable ID you define for known users. While optional, it is recommended that you assign a user_id after signup or login as it allows Amplitude to merge cross-device activity and link prior anonymous events. IDs should not be set for anonymous users, and cannot be changed once set.
       - name: event_type_id
         description: Event type ID
       - name: event_type_name
@@ -148,7 +148,7 @@ models:
           - unique
           - not_null
       - name: user_id
-        description: A readable ID you define for known users; while optional, it’s recommended after signup or login, allows Amplitude to merge cross-device activity and link prior anonymous events, should not be set for anonymous users, and cannot be changed once set.
+        description: A readable ID you define for known users. While optional, it is recommended that you assign a user_id after signup or login as it allows Amplitude to merge cross-device activity and link prior anonymous events. IDs should not be set for anonymous users, and cannot be changed once set.
       - name: events_per_session
         description: The count of events in a session
       - name: session_started_at
