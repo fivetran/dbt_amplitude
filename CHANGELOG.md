@@ -1,3 +1,14 @@
+# dbt_amplitude v1.3.3
+
+[PR #38](https://github.com/fivetran/dbt_amplitude/pull/38) includes the following updates:
+
+## Documentation
+- Updates `user_id` column descriptions in `stg_amplitude`, `amplitude_event_enhanced`, and `amplitude_session_enhanced` for clarity and conciseness.
+- Updates the README to remove badge images and add dbt Core™ supported version information in plain text.
+
+## Under the Hood
+- Adds `persist_docs` configuration to `integration_tests/dbt_project.yml` to validate column-level documentation persistence.
+
 # dbt_amplitude v1.3.2
 
 [PR #37](https://github.com/fivetran/dbt_amplitude/pull/37) includes the following updates:
