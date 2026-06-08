@@ -27,8 +27,8 @@ event_data as (
         select
             *,
             case when _insert_id is not null
-                then row_number() over (partition by _insert_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
-                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
+                then row_number() over (partition by _insert_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by client_upload_time desc)
             end as nth_event_record
 
         from event_data_raw
@@ -63,7 +63,7 @@ session_ranking as (
         cast({{ dbt.date_trunc('day', 'session_started_at') }} as date) as session_started_at_day,
         cast({{ dbt.date_trunc('day', 'session_ended_at') }} as date) as session_ended_at_day,
         case
-            when user_id is not null then row_number() over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_started_at)
+            when user_id is not null then row_number() over (partition by user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by session_started_at)
             else null
         end as user_session_number
     from session_agg
@@ -74,11 +74,11 @@ session_lag as (
         *,
         -- determine prior sessions' end time, then in the following cte calculate the difference between current session's start time and last session's end time to determine the time in between sessions
         case
-            when user_id is not null then lag(session_ended_at,1) over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_ended_at)
+            when user_id is not null then lag(session_ended_at,1) over (partition by user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by session_ended_at)
             else null
         end as last_session_ended_at,
         case
-            when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id {{ amplitude.partition_by_source_relation() }} order by session_ended_at_day)
+            when user_id is not null then lag(session_ended_at_day,1) over (partition by user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by session_ended_at_day)
             else null
         end as last_session_ended_at_day
     from session_ranking
