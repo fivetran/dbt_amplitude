@@ -154,14 +154,6 @@ vars:
     <package_name>__<default_source_table_name>_identifier: your_table_name
 ```
 
-#### Source casing for case-sensitive destinations
-By default, the package applies case-insensitive comparisons when resolving `source_relation` values. If your destination is case-sensitive and you want downstream transformations to respect the exact casing of your source database and schema names, set the following variable:
-
-```yml
-vars:
-    fivetran_using_source_casing: true
-```
-
 #### Change the Build Schema
 By default, this package builds out the Amplitude staging models within a schema titled (<target_schema> + `_source_amplitude`) in your target database, and the Amplitude end models in a schema titled (<target_schema> + `amplitude`) in your target database. If this is not where you would like your Amplitude data to be written to, add the following configuration to your root `dbt_project.yml` file:
 
@@ -181,6 +173,14 @@ vars:
     event_properties_to_pivot: ['event_property_1','event_property_2']
     group_properties_to_pivot: ['group_property_1','group_property_2']
     user_properties_to_pivot: ['user_property_1','user_property_2']
+```
+
+#### Source casing for case-sensitive destinations
+By default, the package applies case-insensitive comparisons when resolving `source_relation` values. If your destination is case-sensitive and you want downstream transformations to respect the exact casing of your source database and schema names, set the following variable:
+
+```yml
+vars:
+    fivetran_using_source_casing: true
 ```
 </details>
 <br>
