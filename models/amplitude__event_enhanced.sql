@@ -27,8 +27,8 @@ event_data as (
         select
             *,
             case when _insert_id is not null
-                then row_number() over (partition by _insert_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
-                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ amplitude.partition_by_source_relation() }} order by client_upload_time desc)
+                then row_number() over (partition by _insert_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by client_upload_time desc)
+                else row_number() over (partition by event_id, device_id, client_event_time, amplitude_user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude') }} order by client_upload_time desc)
             end as nth_event_record
 
         from event_data_raw
@@ -68,8 +68,8 @@ event_enhanced as (
         , event_type.event_type_id
         , event_type.event_type_name
         , event_data.session_id
-        , row_number() over (partition by session_id {{ amplitude.partition_by_source_relation(alias='event_data') }} order by event_time asc) as session_event_number
-        , row_number() over (partition by amplitude_user_id {{ amplitude.partition_by_source_relation(alias='event_data') }} order by event_time asc) as user_event_number
+        , row_number() over (partition by session_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude', alias='event_data') }} order by event_time asc) as session_event_number
+        , row_number() over (partition by amplitude_user_id {{ fivetran_utils.partition_by_source_relation(package_name='amplitude', alias='event_data') }} order by event_time asc) as user_event_number
         , event_data.group_types
 
         {% if var('group_properties_to_pivot') %},

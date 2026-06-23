@@ -13,7 +13,7 @@ fields as (
                 staging_columns=get_event_type_columns()
             )
         }}
-        {{ amplitude.apply_source_relation() }}
+        {{ fivetran_utils.apply_source_relation(package_name='amplitude') }}
     from base
 ),
 
