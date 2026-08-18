@@ -2,7 +2,7 @@
     config(
         materialized='incremental' if is_incremental_compatible() else 'table',
         unique_key='unique_session_id',
-        partition_by={"field": "session_started_at_day", "data_type": "date"} if target.type not in ('spark','databricks') else ['session_started_at_day'],
+        partition_by={"field": "session_started_at_day", "data_type": "date"} if target.type not in ('spark', 'databricks', 'duckdb') else ['session_started_at_day'],
         cluster_by='session_started_at_day',
         incremental_strategy = 'insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         file_format = 'delta'
