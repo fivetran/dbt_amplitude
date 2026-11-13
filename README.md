@@ -15,7 +15,7 @@ This dbt package transforms data from Fivetran's Amplitude connector into analyt
   - [DAG](https://fivetran.github.io/dbt_amplitude/#!/overview?g_v=1)
   - [Changelog](https://github.com/fivetran/dbt_amplitude/blob/main/CHANGELOG.md)
 - dbt Core™ supported versions
-  - `>=1.3.0, <3.0.0`
+  - `>=1.10.0, <3.0.0`
 
 ## What does this dbt package do?
 This package enables you to leverage enhanced event data, view aggregated session and user metrics, and analyze daily performance metrics. It creates enriched models with metrics focused on event analysis, user behavior, and session tracking.
@@ -62,7 +62,7 @@ Include the following Amplitude package version in your `packages.yml` file:
 ```yaml
 packages:
   - package: fivetran/amplitude
-    version: [">=1.4.0", "<1.5.0"]
+    version: [">=1.5.0", "<1.6.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/amplitude_source` in your `packages.yml` since this package has been deprecated.
