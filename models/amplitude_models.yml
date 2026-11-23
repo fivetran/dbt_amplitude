@@ -9,7 +9,7 @@ models:
         description: "{{ doc('source_relation') }}"
       - name: unique_key
         description: Surrogate key generated from the `source_relation`, `unique_event_id`, and `unique_event_type_id`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: unique_event_id
@@ -144,7 +144,7 @@ models:
         description: "{{ doc('source_relation') }}"
       - name: unique_session_id
         description: Unique key of each session, concatenating source_relation, user_id, and session_id
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: user_id
@@ -174,12 +174,18 @@ models:
 
   - name: amplitude__user_enhanced
     description: Each record represents a distinct user with aggregated metrics for that user.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - source_relation
+              - amplitude_user_id
     columns:
       - name: source_relation
         description: "{{ doc('source_relation') }}"
       - name: amplitude_user_id
         description: Unique key for each user, which is user_id by default. If user_id does not exist, use amplitude_id
-        tests:
+        data_tests:
           - not_null
       - name: user_created_at
         description: Event_time (UTC) of the user's first event
@@ -203,7 +209,7 @@ models:
         description: "{{ doc('source_relation') }}"
       - name: daily_unique_key
         description: Surrogate key generated from the `source_relation`, `event_day`, and `event_type`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_day
